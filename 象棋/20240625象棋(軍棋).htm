@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	    <title>象棋(軍棋)</title>
+		<meta charset="UTF-8">
+		<style>
+			canvas { border: 1px solid #000; }
+		</style>
+	</head>
+	<body>
+		<canvas id="_Canvas" width="500" height="550"></canvas>
+		
+		<img id="w0625" src="./0625.png" alt="Source Image" style="display:none;" >
+		
+		<img id="select" src="./select.png" alt="Source Image" style="display:none;" >
+		
+		<img id="left" src="./left.png" alt="Source Image" style="display:none;" >
+		
+		<img id="right" src="./right.png" alt="Source Image" style="display:none;" >
+		
+	</body>
+</html>
+
+
+<!--
+=======================================================
+   Script
+=======================================================
+-->
+<script>
+
+let cellWidth = 50
+
+let x = 1
+let y = 1
+
+let matrix = []
+
+const canvas = document.getElementById('_Canvas');
+const ctx = canvas.getContext('2d');	
+
+function drawImageByIndex( imageId , row, col ) {
+	let img = document.getElementById( imageId );
+	ctx.drawImage(img, 
+	cellWidth/2+col*cellWidth, 
+	cellWidth/2+row*cellWidth,
+	cellWidth,cellWidth); 	
+}
+//畫背景
+function drawBackground() {
+	//畫橘色
+	ctx.fillStyle = 'orange';
+	ctx.fillRect(0, 0, cellWidth*(8+2), cellWidth*(9+2));
+
+	ctx.beginPath();
+	ctx.strokeStyle = 'black'; 
+	ctx.lineWidth = 2; 
+
+	//畫格子
+	for( let i= 1 ;i<= 8+1 ;i++ ){
+		ctx.moveTo(i*cellWidth, 1*cellWidth);  
+		ctx.lineTo(i*cellWidth, (9+1)*cellWidth); 
+	}
+	for( let j= 1 ;j<= 9+1 ;j++ ){
+		ctx.moveTo(1*cellWidth, j*cellWidth);  
+		ctx.lineTo((8+1)*cellWidth, j*cellWidth); 
+	}
+	ctx.moveTo(4*cellWidth, 1*cellWidth);  
+	ctx.lineTo(6*cellWidth, 3*cellWidth); 
+
+	ctx.moveTo(6*cellWidth, 1*cellWidth);  
+	ctx.lineTo(4*cellWidth, 3*cellWidth); 
+
+	ctx.moveTo(4*cellWidth, 8*cellWidth);  
+	ctx.lineTo(6*cellWidth, 10*cellWidth); 
+
+	ctx.moveTo(6*cellWidth, 8*cellWidth);  
+	ctx.lineTo(4*cellWidth, 10*cellWidth); 
+
+	ctx.stroke();	
+
+
+	ctx.beginPath();
+	ctx.strokeStyle = 'orange'; 
+	ctx.lineWidth = 2.5; 
+
+	for( let i= 2 ;i<= 8 ;i++ ){
+		ctx.moveTo(i*cellWidth, 5*cellWidth);  
+		ctx.lineTo(i*cellWidth, 6*cellWidth); 
+	}
+
+	ctx.stroke();	
+	drawImageByIndex( "right" , 3, 0 );
+	drawImageByIndex( "w0625" , 3, 2 );
+	drawImageByIndex( "w0625" , 3, 4 );
+	drawImageByIndex( "w0625" , 3, 6 );
+	drawImageByIndex( "left" , 3, 8 );
+	drawImageByIndex( "w0625" , 2, 1 );
+	drawImageByIndex( "w0625" , 2, 7 );
+	
+	drawImageByIndex( "right" , 6, 0 );
+	drawImageByIndex( "w0625" , 6, 2 );
+	drawImageByIndex( "w0625" , 6, 4 );
+	drawImageByIndex( "w0625" , 6, 6 );
+	drawImageByIndex( "left" , 6, 8 );
+	drawImageByIndex( "w0625" , 7, 1 );
+	drawImageByIndex( "w0625" , 7, 7 );
+
+	drawImageByIndex( "select" , x, y );
+	
+
+	
+	console.log(matrix);
+	
+	drawPieces();
+}
+
+
+window.onload = function() {
+
+	//陣列-棋
+	for (let row = 0; row < 10; row++) {
+		matrix[row] = [];
+		
+		for (let col = 0; col < 9; col++) {
+			matrix[row][col] = ""; 
+		}
+	}
+
+	matrix[0][0] = "黑車";
+	matrix[0][1] = "黑馬";
+	matrix[0][2] = "黑象";
+	matrix[0][3] = "黑士";
+	matrix[0][4] = "黑將";
+	matrix[0][5] = "黑士";
+	matrix[0][6] = "黑象";
+	matrix[0][7] = "黑馬";
+	matrix[0][8] = "黑車";
+	matrix[2][1] = "黑包";
+	matrix[2][7] = "黑包";
+	matrix[3][0] = "黑卒";
+	matrix[3][2] = "黑卒";
+	matrix[3][4] = "黑卒";
+	matrix[3][6] = "黑卒";
+	matrix[3][8] = "黑卒";
+	
+	matrix[9][0] = "紅車";
+	matrix[9][1] = "紅馬";
+	matrix[9][2] = "紅相";
+	matrix[9][3] = "紅仕";
+	matrix[9][4] = "紅帥";
+	matrix[9][5] = "紅仕";
+	matrix[9][6] = "紅相";
+	matrix[9][7] = "紅馬";
+	matrix[9][8] = "紅炮";
+	matrix[7][1] = "紅炮";
+	matrix[7][7] = "紅兵";
+	matrix[6][0] = "紅兵";
+	matrix[6][2] = "紅兵";
+	matrix[6][4] = "紅兵";
+	matrix[6][6] = "紅兵";
+	matrix[6][8] = "紅兵";
+	
+	drawBackground();
+	drawPieces();
+	
+	
+}
+
+
+
+//畫棋子們
+function drawPieces() {
+	
+	//陣列
+	for (let row = 0; row < matrix.length; row++) {
+		for (let col = 0; col < matrix[row].length; col++) {
+		
+			drawPiece( matrix[row][col] , row , col );
+			
+		}
+	}
+}
+
+//畫單個棋子
+function drawPiece( who , row ,col ){
+	if (who.length!=2){
+		return;
+	}
+	ctx.beginPath();
+	ctx.arc((col+1)*50, (row+1)*50, 25, 0, 360);
+	ctx.fillStyle="white"; //填充颜色
+	
+	ctx.fill(); //画实心圆
+	ctx.closePath();
+
+	ctx.beginPath();
+	ctx.lineWidth = 1;
+	if( who.substr(0,1) =="黑" ){
+		ctx.strokeStyle = "black";
+		ctx.fillStyle="black"; //填充颜色,默认是黑色
+	}else if( who.substr(0,1) =="紅" ){
+		ctx.strokeStyle = "red";
+		ctx.fillStyle="red"; //填充颜色,默认是黑色
+	}
+	ctx.arc((col+1)*50, (row+1)*50, 20, 0, 360);
+	ctx.stroke();
+	ctx.closePath();
+
+	ctx.font = "30px 微軟正黑體"
+	ctx.textAlign = "center"
+	ctx.textBaseline = "middle"
+	ctx.fillText(who.substr(1,1), (col+1)*50, (row+1)*50)
+}
+
+
+
+
+//移動棋子
+document.addEventListener('keydown', 
+	function(event) {
+		switch(event.code) {
+			case 'ArrowUp':
+				  console.log('Up arrow key pressed.');
+				  if( x > 0){
+				      x= x-1;
+				  }
+				  break;
+				  
+			case 'ArrowDown':
+				  console.log('Down arrow key pressed.');
+				  if( x < 9){
+					  x= x+1;
+				  }
+				  break;
+				  
+			case 'ArrowLeft':
+				  console.log('Left arrow key pressed.');
+				  if( y > 0){
+				      y= y-1;
+				  }
+				  break;
+				  
+			case 'ArrowRight':
+				  console.log('Right arrow key pressed.');
+				  if( y < 8){
+				      y= y+1;
+				  }
+				  break;
+				  
+		    case 'Space': //下棋
+				  console.log('Space arrow key pressed.');
+				  if ( matrix[x][y] !=""){
+					console.log("yes");
+					
+					
+				  }
+				  break;
+				  
+		
+		}
+		
+		drawBackground();  //畫背景
+		
+	}
+	
+);
+
+</script> 

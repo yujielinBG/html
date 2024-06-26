@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	    <title>五子棋</title>
+		<meta charset="UTF-8">
+		<style>
+			canvas { border: 1px solid #000; }
+		</style>
+	</head>
+	<body>
+		<canvas id="_Canvas" width="500" height="500"></canvas>
+		
+		<img id="whiteGo" src="./白棋-removebg-preview.png" alt="Source Image" style="display:none;" >
+		
+		<img id="blackGo" src="./黑棋-removebg-preview.png" alt="Source Image" style="display:none;" >
+		
+		<img id="select" src="./select.png" alt="Source Image" style="display:none;" >
+		
+	</body>
+</html>
+
+
+<!--
+=======================================================
+   Script
+=======================================================
+-->
+<script>
+
+let cellWidth = 20;
+
+let choiceRow = 0;
+let choiceCol = 0;
+
+let rows = 20;
+let cols = 20;
+
+let totalPieces = 1;
+
+const GO_EMPTY = 0;
+const GO_BLACK = 1;
+const GO_WHITE = 2;
+
+let matrix = [];
+
+const canvas = document.getElementById('_Canvas');
+const ctx = canvas.getContext('2d');	
+	
+window.onload = function() {
+
+	//陣列
+	for (let row = 0; row < rows; row++) {
+		matrix[row] = [];
+		
+		for (let col = 0; col < cols; col++) {
+			matrix[row][col] = 0; 
+		}
+	}
+
+	drawBackground();
+
+}
+
+function drawImageByIndex( imageId , row, col ) {
+	let img = document.getElementById( imageId );
+	ctx.drawImage(img, 
+	cellWidth/2+col*cellWidth, 
+	cellWidth/2+row*cellWidth,
+	cellWidth,cellWidth); 	
+}
+
+//函數:畫背景
+function drawBackground() {
+
+	ctx.clearRect(0, 0, cellWidth*(cols+1), cellWidth*(rows+1));
+	//畫橘色
+	ctx.fillStyle = 'orange';
+	ctx.fillRect(0, 0, cellWidth*(cols+1), cellWidth*(rows+1));
+	
+
+	//畫格子
+	for( let i= 0 ;i<= cols+1 ;i++ ){
+		ctx.moveTo(i*cellWidth, 0);  
+		ctx.lineTo(i*cellWidth, cellWidth*(rows+1)); 
+	}
+	for( let j= 0 ;j<= rows+1 ;j++ ){
+		ctx.moveTo(0, j*cellWidth);  
+		ctx.lineTo(cellWidth*(cols+1), j*cellWidth); 
+	}
+	ctx.strokeStyle = 'black'; 
+	ctx.lineWidth = 2; 
+	
+	ctx.stroke();	
+
+//陣列
+	for (let row = 0; row < matrix.length; row++) {
+		for (let col = 0; col < matrix[row].length; col++) {
+		
+			if ( matrix[row][col] == GO_BLACK){
+				drawImageByIndex( "blackGo", row, col );
+			}else if ( matrix[row][col] == GO_WHITE){
+				drawImageByIndex( "whiteGo", row, col );
+			}
+			
+		}
+	}	
+		
+	//放select 			
+	drawImageByIndex( "select", choiceRow, choiceCol );	  
+}
+
+
+//移動棋子
+document.addEventListener('keydown', 
+	function(event) {
+		
+		switch(event.code) {
+			case 'ArrowUp':
+				  console.log('Up arrow key pressed.');
+				  if( choiceRow > 0){
+				      choiceRow= choiceRow-1;
+				  }
+				  break;
+				  
+			case 'ArrowDown':
+				  console.log('Down arrow key pressed.');
+				  if( choiceRow < rows-1){
+					  choiceRow= choiceRow+1;
+				  }
+				  break;
+				  
+			case 'ArrowLeft':
+				  console.log('Left arrow key pressed.');
+				  if( choiceCol > 0){
+				      choiceCol= choiceCol-1;
+				  }
+				  break;
+				  
+			case 'ArrowRight':
+				  console.log('Right arrow key pressed.');
+				  if( choiceCol < cols-1){
+				      choiceCol= choiceCol+1;
+				  }
+				  break;
+				  
+		    case 'Space':     //下棋
+				  console.log('Space arrow key pressed.');
+				  if ( matrix[choiceRow][choiceCol] == GO_EMPTY){
+				  
+						if (totalPieces%2 == GO_EMPTY ){
+						matrix[choiceRow][choiceCol] = GO_WHITE;
+					  } else {
+						matrix[choiceRow][choiceCol] = GO_BLACK;
+					  }
+					  totalPieces++;
+					  console.log(matrix);
+				  }
+				  break;
+				  
+		
+		}
+		
+		drawBackground();  //畫背景
+		
+	}
+	
+);
+	
+
+
+
+
+
+</script> 

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	    <title>Let draw!</title>
+		<meta charset="UTF-8">
+		<title>Canvas Example</title>
+		<style>
+			canvas { border: 1px solid #000; }
+		</style>
+	</head>
+	<body>
+		<canvas id="_Canvas" width="450" height="550"></canvas>
+		<img id="frogImg" src="./frog.png" alt="Source Image" style="display:none;">
+		
+		Robot
+	</body>
+</html>
+
+
+<!--
+=======================================================
+   Script
+=======================================================
+-->
+<script>
+
+const canvas = document.getElementById('_Canvas');
+const ctx = canvas.getContext('2d');
+
+let x = 10;
+let y = 20;
+
+let img = document.getElementById('frogImg');
+ctx.drawImage(img, x, y ); // x 和 y 是图片在 Canvas 上的位置坐标
+
+
+ctx.moveTo(150, 100);  
+ctx.lineTo(250, 100); 
+
+ctx.moveTo(250, 100);  
+ctx.lineTo(250, 170);
+
+ctx.moveTo(250, 170);  
+ctx.lineTo(150, 170); 
+
+ctx.moveTo(150, 170);  
+ctx.lineTo(150, 100); 
+
+
+ctx.moveTo(175, 120);  
+ctx.lineTo(175, 140); 
+
+ctx.moveTo(225, 120);  
+ctx.lineTo(225, 140);
+
+ctx.moveTo(180, 155);  
+ctx.lineTo(220, 155); 
+
+
+
+// 设置线条样式（颜色、宽度等）
+ctx.strokeStyle = 'blue'; // 线条颜色为蓝色
+ctx.lineWidth = 2.5;        // 线条宽度为2.5像素
+
+// 绘制线条
+ctx.stroke();	
+
+
+
+</script> 
