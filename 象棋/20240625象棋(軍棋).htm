@@ -303,22 +303,37 @@ document.addEventListener('keydown',
 				  console.log(whatColor);
 				  console.log(whoseTurn);
 
-				  if ( whatColor == whoseTurn%2 ){
-					console.log("change");
-					selected.row = row;
-					selected.col = col;
-					selected.flag = true ;
-					console.log( selected ) ;
-				  }else {
-					console.log("move");
-					whoseTurn++
-					selected.flag = false ;
-					matrix[row][col] = matrix[selected.row][selected.col];
-					matrix[selected.row][selected.col] = "";
-				  }
+				  if ( selected.flag == false ) {
+					if ( whatColor == whoseTurn%2 ){
+						//未選擇
+						selected.row = row;
+						selected.col = col;
+						selected.flag = true ;
+						console.log( selected ) ;
+					}
+				  } else {
+					//已選擇
+					//如果同色，則重選
+					//如果不同色則移動
+					if ( whatColor == whoseTurn%2 ){
+						console.log("change");
+						selected.row = row;
+						selected.col = col;
+						selected.flag = true ;
+						console.log( selected ) ;
+				 	 }else {
+						console.log("move");
+						whoseTurn++
+						selected.flag = false ;
+						matrix[row][col] = matrix[selected.row][selected.col];
+						matrix[selected.row][selected.col] = "";
+				 	 }
 					console.log(whatColor);
 					console.log(whoseTurn);
 
+						
+				  }
+				  
 					
 				  break;
 				  
