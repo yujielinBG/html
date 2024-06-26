@@ -34,7 +34,7 @@ let cellWidth = 50
 let row = 1
 let col = 1
 
-let whoseTurn = 0
+let steps = 0
 let whatColor = 0
 
 let matrix = []
@@ -301,10 +301,10 @@ document.addEventListener('keydown',
 					console.log("not thing");
 				  }
 				  console.log(whatColor);
-				  console.log(whoseTurn);
+				  console.log(steps);
 
 				  if ( selected.flag == false ) {
-					if ( whatColor == whoseTurn%2 ){
+					if ( whatColor == steps%2 ){
 						//未選擇
 						selected.row = row;
 						selected.col = col;
@@ -315,7 +315,7 @@ document.addEventListener('keydown',
 					//已選擇
 					//如果同色，則重選
 					//如果不同色則移動
-					if ( whatColor == whoseTurn%2 ){
+					if ( whatColor == steps%2 ){
 						console.log("change");
 						selected.row = row;
 						selected.col = col;
@@ -323,13 +323,13 @@ document.addEventListener('keydown',
 						console.log( selected ) ;
 				 	 }else {
 						console.log("move");
-						whoseTurn++
+						steps++
 						selected.flag = false ;
 						matrix[row][col] = matrix[selected.row][selected.col];
 						matrix[selected.row][selected.col] = "";
 				 	 }
 					console.log(whatColor);
-					console.log(whoseTurn);
+					console.log(steps);
 
 						
 				  }
