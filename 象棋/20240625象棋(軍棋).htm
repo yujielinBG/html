@@ -31,10 +31,11 @@
 
 let cellWidth = 50
 
-let x = 1
-let y = 1
+let row = 1
+let col = 1
 
 let matrix = []
+let selected = new Object() ;
 
 const canvas = document.getElementById('_Canvas');
 const ctx = canvas.getContext('2d');	
@@ -106,7 +107,7 @@ function drawBackground() {
 	drawImageByIndex( "w0625" , 7, 1 );
 	drawImageByIndex( "w0625" , 7, 7 );
 
-	drawImageByIndex( "select" , x, y );
+	drawImageByIndex( "select" , row, col );
 	
 
 	
@@ -117,6 +118,9 @@ function drawBackground() {
 
 
 window.onload = function() {
+	selected.row = 0;
+	selected.col = 0;
+	selected.flag = false ;
 
 	//陣列-棋
 	for (let row = 0; row < 10; row++) {
@@ -222,38 +226,40 @@ document.addEventListener('keydown',
 		switch(event.code) {
 			case 'ArrowUp':
 				  console.log('Up arrow key pressed.');
-				  if( x > 0){
-				      x= x-1;
+				  if( row > 0){
+				      row= row-1;
 				  }
 				  break;
 				  
 			case 'ArrowDown':
 				  console.log('Down arrow key pressed.');
-				  if( x < 9){
-					  x= x+1;
+				  if( row < 9){
+					  row= row+1;
 				  }
 				  break;
 				  
 			case 'ArrowLeft':
 				  console.log('Left arrow key pressed.');
-				  if( y > 0){
-				      y= y-1;
+				  if( col > 0){
+				      col= col-1;
 				  }
 				  break;
 				  
 			case 'ArrowRight':
 				  console.log('Right arrow key pressed.');
-				  if( y < 8){
-				      y= y+1;
+				  if( col < 8){
+				      col= col+1;
 				  }
 				  break;
 				  
 		    case 'Space': //下棋
 				  console.log('Space arrow key pressed.');
-				  if ( matrix[x][y] !=""){
+				  if ( matrix[row][col] !=""){
 					console.log("yes");
-					
-					
+					selected.row = row;
+					selected.col = col;
+					selected.flag = true ;
+					console.log( selected ) ;
 				  }
 				  break;
 				  
