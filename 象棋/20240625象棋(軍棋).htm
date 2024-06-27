@@ -162,7 +162,7 @@ window.onload = function() {
 		matrix[row] = [];
 		
 		for (let col = 0; col < 9; col++) {
-			matrix[row][col] = ""; 
+			matrix[row][col] = "  "; 
 		}
 	}
 
@@ -223,7 +223,7 @@ function drawPieces() {
 
 //畫單個棋子
 function drawPiece( who , row ,col ){
-	if (who.length!=2){
+	if (who == "  " ){
 		return;
 	}
 	ctx.beginPath();
@@ -289,7 +289,7 @@ document.addEventListener('keydown',
 				  
 		    case 'Space': //下棋
 				  console.log('Space arrow key pressed.');
-				  if ( matrix[row][col].length == 0 ) {
+				  if ( matrix[row][col] == "  " ) {
 					whatColor = 3;
 				  } else if ( matrix[row][col].substr(0,1) == "紅" ){
 					whatColor = 0;
@@ -323,10 +323,22 @@ document.addEventListener('keydown',
 						console.log( selected ) ;
 				 	 }else {
 						console.log("move");
+
+
+						if (matrix[selected.row][selected.col].substr(1,1) == "車"){
+							console.log("是車");
+							if (( selected.row != row ) && (selected.col!= col )){
+								console.log("retern");
+								return;
+							}
+						}
+				 		 
+
+
 						whoseTurn++
 						selected.flag = false ;
 						matrix[row][col] = matrix[selected.row][selected.col];
-						matrix[selected.row][selected.col] = "";
+						matrix[selected.row][selected.col] = "  ";
 				 	 }
 					console.log(whatColor);
 					console.log(whoseTurn);
