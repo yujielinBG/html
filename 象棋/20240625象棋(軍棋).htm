@@ -157,7 +157,7 @@ window.onload = function() {
 	selected.col = 0;
 	selected.flag = false ;
 
-	//陣列-棋
+	//陣列-棋(初始化)
 	for (let row = 0; row < 10; row++) {
 		matrix[row] = [];
 		
@@ -311,40 +311,80 @@ document.addEventListener('keydown',
 						selected.flag = true ;
 						console.log( selected ) ;
 					}
-				  } else {
-					//已選擇
-					//如果同色，則重選
-					//如果不同色則移動
-					if ( whatColor == whoseTurn%2 ){
-						console.log("change");
-						selected.row = row;
-						selected.col = col;
-						selected.flag = true ;
-						console.log( selected ) ;
-				 	 }else {
-						console.log("move");
+					} else {
+						//已選擇但同色重選
+						if ( whatColor == whoseTurn%2 ){
+							console.log("change");
+							selected.row = row;
+							selected.col = col;
+							selected.flag = true ;
+							console.log( selected ) ;
+						}else {
+							//如果不同色則移動
+							console.log("move");
 
-
-						if (matrix[selected.row][selected.col].substr(1,1) == "車"){
-							console.log("是車");
-							if (( selected.row != row ) && (selected.col!= col )){
-								console.log("retern");
-								return;
+							if ((matrix[selected.row][selected.col].substr(1,1) == "將")|| (matrix[selected.row][selected.col].substr(1,1) == "將")){
+								console.log("是將");
+								//if (){
+									//console.log("retern");
+									//return;
+								//}
 							}
+							if ((matrix[selected.row][selected.col].substr(1,1) == "士")|| (matrix[selected.row][selected.col].substr(1,1) == "仕")){
+								console.log("是士");
+								//if (){
+									//console.log("retern");
+									//return;
+								//}
+							}
+							if ((matrix[selected.row][selected.col].substr(1,1) == "象")|| (matrix[selected.row][selected.col].substr(1,1) == "相")){
+								console.log("是象");
+								//if (  ){
+								//	console.log("retern");
+								//	return;
+								//}
+							}
+							if (matrix[selected.row][selected.col].substr(1,1) == "車"){
+								console.log("是車");
+								if (( selected.row != row ) && (selected.col!= col )){
+									console.log("retern");
+									return;
+								}
+							}
+							if (matrix[selected.row][selected.col].substr(1,1) == "馬"){
+								console.log("是馬");
+								//if (  ){
+								//	console.log("retern");
+								//	return;
+								//}
+							}
+							if ((matrix[selected.row][selected.col].substr(1,1) == "包")|| (matrix[selected.row][selected.col].substr(1,1) == "炮")){
+								console.log("是包");
+								//if (){
+									//console.log("retern");
+									//return;
+								//}
+							}
+							if ((matrix[selected.row][selected.col].substr(1,1) == "卒")|| (matrix[selected.row][selected.col].substr(1,1) == "兵")){
+								console.log("是卒");
+								//if (){
+									//console.log("retern");
+									//return;
+								//}
+							}
+							whoseTurn++;
+							selected.flag = false ;
+							matrix[row][col] = matrix[selected.row][selected.col];
+							matrix[selected.row][selected.col] = "  " ;
+						    console.log("row="+row + ",col=" + col + ",selectedRow="+ selected.row + ",selectedCol=" +selected.col)
 						}
-				 		 
 
-
-						whoseTurn++
-						selected.flag = false ;
-						matrix[row][col] = matrix[selected.row][selected.col];
-						matrix[selected.row][selected.col] = "  ";
-				 	 }
+				 	}
 					console.log(whatColor);
 					console.log(whoseTurn);
 
-						
-				  }
+					console.log(matrix);
+				  
 				  
 					
 				  break;
