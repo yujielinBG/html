@@ -40,6 +40,8 @@ let whatColor = 0
 let matrix = []
 let selected = new Object() ;
 
+let car_ =0
+
 const canvas = document.getElementById('_Canvas');
 const ctx = canvas.getContext('2d');	
 
@@ -375,9 +377,55 @@ document.addEventListener('keydown',
 								}
 							}
 							if (matrix[selected.row][selected.col].substr(1,1) == "車"){
-								console.log("是車");
+								//console.log("是車");
 								if (( selected.row != row ) && (selected.col!= col )){
-									console.log("retern");
+									//console.log("retern");
+									return;
+								}else if( selected.row == row ){
+									//console.log("改col");
+									if ( selected.col < col ){
+										//console.log("selected.col < col");
+										for( let i = selected.col+1 ; i <= col ; i++ ){
+											if (matrix[row][i] != "  " ){
+												//console.log("有棋");
+												car_++
+												//console.log(car_);
+											}
+										}
+									}else if ( selected.col > col ){
+										//console.log("selected.col > col");
+										for( let i = selected.col-1 ; i >= col ; i-- ){
+											if (matrix[row][i] != "  " ){
+												//console.log("有棋");
+												car_++
+												//console.log(car_);
+											}
+										}
+									}
+								}else if( selected.col == col ){
+									//console.log("改row");
+									if ( selected.row < row ){
+										//console.log("selected.row < row");
+										for( let i = selected.row+1 ; i <= row ; i++ ){
+											if (matrix[i][col] != "  " ){
+												//console.log("有棋");
+												car_++
+											}
+										}
+										//console.log(car_);
+									}else if ( selected.row > row ){
+										//console.log("selected.row > row");
+										for( let i = selected.row-1 ; i >= row ; i-- ){
+											if (matrix[i][col] != "  " ){
+												//console.log("有棋");
+												car_++
+											}
+										}
+										//console.log(car_);
+									}
+								}
+								if( car_ > 0 ){
+									//console.log("return");
 									return;
 								}
 							}
@@ -432,13 +480,13 @@ document.addEventListener('keydown',
 							selected.flag = false ;
 							matrix[row][col] = matrix[selected.row][selected.col];
 							matrix[selected.row][selected.col] = "  " ;
-						    //console.log("row="+row + ",col=" + col + ",selectedRow="+ selected.row + ",selectedCol=" +selected.col)
+						    
 						}
 
 				 	}
+
 					//console.log(whatColor);
 					//console.log(whoseTurn);
-
 					//console.log(matrix);
 					
 				  break;
@@ -446,6 +494,8 @@ document.addEventListener('keydown',
 		}
 		
 		drawBackground();  //畫背景
+		car_ = 0
+		console.log("row="+row + ",col=" + col + ",selectedRow="+ selected.row + ",selectedCol=" +selected.col)
 		
 	}
 	
