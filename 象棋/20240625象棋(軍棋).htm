@@ -112,7 +112,6 @@ function drawBackground() {
 
 	drawImageByIndex( "select" , row, col );
 	
-
 	
 	//console.log(matrix);
 	
@@ -147,10 +146,7 @@ function drawBackground() {
 		ctx.fillText(who.substr(1,1), (selected.col+1)*50, (selected.row+1)*50)
 	}
 
-
-
 }
-
 
 window.onload = function() {
 	selected.row = 0;
@@ -203,10 +199,7 @@ window.onload = function() {
 	drawBackground();
 	drawPieces();
 	
-	
 }
-
-
 
 //畫棋子們
 function drawPieces() {
@@ -251,8 +244,6 @@ function drawPiece( who , row ,col ){
 	ctx.textBaseline = "middle"
 	ctx.fillText(who.substr(1,1), (col+1)*50, (row+1)*50)
 }
-
-
 
 
 //移動棋子
@@ -324,37 +315,52 @@ document.addEventListener('keydown',
 							//console.log("move");
 
 							if (matrix[selected.row][selected.col].substr(1,1) == "將"){
-								console.log("是將");
-								//if (){
+								//console.log("是將");
+								if ( (row >2)|| (col >5)|| (col <3) ){ 
 									//console.log("retern");
-									//return;
-								//}
+									return;
+								}else if( ((Math.abs(row-selected.row) != 1)|| (col != selected.col ))&& ((Math.abs(col-selected.col) != 1)|| (row != selected.row )) ){
+									//console.log("retern");
+									return;
+								}
 							}
 							if (matrix[selected.row][selected.col].substr(1,1) == "帥"){
-								console.log("是帥");
-								//if (){
+								//console.log("是帥");
+								if ( (row <7)|| (col >5)|| (col <3) ){
 									//console.log("retern");
-									//return;
-								//}
+									return;
+								}else if( ((Math.abs(row-selected.row) != 1)|| (col != selected.col ))&& ((Math.abs(col-selected.col) != 1)|| (row != selected.row )) ){
+									//console.log("retern");
+									return;
+								}
 							}
 							if (matrix[selected.row][selected.col].substr(1,1) == "士"){
-								console.log("是士");
-								//if (){
+								//console.log("是士");
+								if ( (row >2)|| (col >5)|| (col <3) ){ 
 									//console.log("retern");
-									//return;
-								//}
+									return;
+								}else if ( (Math.abs(row-selected.row) != 1)|| (Math.abs(col-selected.col) != 1) ){
+									//console.log("return");
+									return;
+								}
 							}
 							if (matrix[selected.row][selected.col].substr(1,1) == "仕"){
-								console.log("是仕");
-								//if (  ){
+								//console.log("是仕");
+								if ( (row <7)|| (col >5)|| (col <3) ){
 									//console.log("retern");
-									//return;
-								//}
+									return;
+								}else if ( (Math.abs(row-selected.row) != 1)|| (Math.abs(col-selected.col) != 1) ){
+									//console.log("return");
+									return;
+								}
 							}
 							if (matrix[selected.row][selected.col].substr(1,1) == "象"){
 								console.log("是象");
 								if ( row > 4 ){
-									console.log("retern");
+									console.log("return");
+									return;
+								}else if ( (Math.abs(row-selected.row) != 2)|| (Math.abs(col-selected.col) != 2) ){
+									console.log("return");
 									return;
 								}
 							}
@@ -362,6 +368,9 @@ document.addEventListener('keydown',
 								console.log("是相");
 								if ( row < 5 ){
 									console.log("retern");
+									return;
+								}else if ( (Math.abs(row-selected.row) != 2)|| (Math.abs(col-selected.col) != 2) ){
+									console.log("return");
 									return;
 								}
 							}
@@ -374,46 +383,46 @@ document.addEventListener('keydown',
 							}
 							if (matrix[selected.row][selected.col].substr(1,1) == "馬"){
 								console.log("是馬");
-								//if (  ){
-								//	console.log("retern");
-								//	return;
-								//}
+								if ( ((Math.abs(row-selected.row) != 1)|| (Math.abs(col-selected.col) != 2))&& ((Math.abs(row-selected.row) != 2)|| (Math.abs(col-selected.col) != 1)) ){
+									console.log("retern");
+									return;
+								}
 							}
 							if ((matrix[selected.row][selected.col].substr(1,1) == "包")|| (matrix[selected.row][selected.col].substr(1,1) == "炮")){
 								console.log("是包炮");
-								if (( selected.row != row ) && (selected.col!= col )){
+								if (( selected.row != row )&& (selected.col!= col )){
 									console.log("retern");
 									return;
 								}
 							}	
 							if (matrix[selected.row][selected.col].substr(1,1) == "卒"){
-								console.log("是卒");
+								//console.log("是卒");
 								if ( selected.row <=4 ){
-									console.log("未過河");
+									//console.log("未過河");
 									if( (row != selected.row+1)|| (col != selected.col ) ){
-										console.log("return");
+										//console.log("return");
 										return;
 									}
 								}else if ( selected.row >=5 ){
-									console.log("已過河");
+									//console.log("已過河");
 									if( ((row != selected.row+1)|| (col != selected.col ))&& ((col != selected.col+1)|| (row != selected.row ))&& ((col != selected.col-1)|| (row != selected.row )) ){
-										console.log("return");
+										//console.log("return");
 										return;
 									}
 								}
 							}
 							if (matrix[selected.row][selected.col].substr(1,1) == "兵"){
-								console.log("是兵");
+								//console.log("是兵");
 								if ( selected.row <=4 ){
-									console.log("已過河");
+									//console.log("已過河");
 									if( ((row != selected.row-1)|| (col != selected.col ))&& ((col != selected.col+1)|| (row != selected.row ))&& ((col != selected.col-1)|| (row != selected.row )) ){
-										console.log("return");
+										//console.log("return");
 										return;
 									}
 								}else if ( selected.row >=5 ){
-									console.log("未過河");
+									//console.log("未過河");
 									if( (row != selected.row-1)|| (col != selected.col ) ){
-										console.log("return");
+										//console.log("return");
 										return;
 									}
 								}
@@ -431,11 +440,8 @@ document.addEventListener('keydown',
 					//console.log(whoseTurn);
 
 					//console.log(matrix);
-				  
-				  
 					
 				  break;
-				  
 		
 		}
 		
