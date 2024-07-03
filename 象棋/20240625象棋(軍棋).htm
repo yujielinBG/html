@@ -41,6 +41,7 @@ let matrix = []
 let selected = new Object() ;
 
 let car_ =0
+let cannon_ =0
 
 const canvas = document.getElementById('_Canvas');
 const ctx = canvas.getContext('2d');	
@@ -281,7 +282,7 @@ document.addEventListener('keydown',
 				  break;
 				  
 		    case 'Space': //下棋
-				  //console.log('Space arrow key pressed.');
+				  console.log('Space arrow key pressed.');
 				  if ( matrix[row][col] == "  " ) {
 					whatColor = 3;
 				  } else if ( matrix[row][col].substr(0,1) == "紅" ){
@@ -385,7 +386,7 @@ document.addEventListener('keydown',
 									//console.log("改col");
 									if ( selected.col < col ){
 										//console.log("selected.col < col");
-										for( let i = selected.col+1 ; i <= col ; i++ ){
+										for( let i = selected.col+1 ; i < col ; i++ ){
 											if (matrix[row][i] != "  " ){
 												//console.log("有棋");
 												car_++
@@ -394,7 +395,7 @@ document.addEventListener('keydown',
 										}
 									}else if ( selected.col > col ){
 										//console.log("selected.col > col");
-										for( let i = selected.col-1 ; i >= col ; i-- ){
+										for( let i = selected.col-1 ; i > col ; i-- ){
 											if (matrix[row][i] != "  " ){
 												//console.log("有棋");
 												car_++
@@ -406,7 +407,7 @@ document.addEventListener('keydown',
 									//console.log("改row");
 									if ( selected.row < row ){
 										//console.log("selected.row < row");
-										for( let i = selected.row+1 ; i <= row ; i++ ){
+										for( let i = selected.row+1 ; i < row ; i++ ){
 											if (matrix[i][col] != "  " ){
 												//console.log("有棋");
 												car_++
@@ -415,7 +416,7 @@ document.addEventListener('keydown',
 										//console.log(car_);
 									}else if ( selected.row > row ){
 										//console.log("selected.row > row");
-										for( let i = selected.row-1 ; i >= row ; i-- ){
+										for( let i = selected.row-1 ; i > row ; i-- ){
 											if (matrix[i][col] != "  " ){
 												//console.log("有棋");
 												car_++
@@ -430,16 +431,65 @@ document.addEventListener('keydown',
 								}
 							}
 							if (matrix[selected.row][selected.col].substr(1,1) == "馬"){
-								console.log("是馬");
+								//console.log("是馬");
 								if ( ((Math.abs(row-selected.row) != 1)|| (Math.abs(col-selected.col) != 2))&& ((Math.abs(row-selected.row) != 2)|| (Math.abs(col-selected.col) != 1)) ){
 									console.log("retern");
 									return;
 								}
 							}
 							if ((matrix[selected.row][selected.col].substr(1,1) == "包")|| (matrix[selected.row][selected.col].substr(1,1) == "炮")){
-								console.log("是包炮");
+								//console.log("是包炮");
 								if (( selected.row != row )&& (selected.col!= col )){
-									console.log("retern");
+									//console.log("retern");
+									return;
+								}else if( selected.row == row ){
+									//console.log("改col");
+									if ( selected.col < col ){
+										//console.log("selected.col < col");
+										for( let i = selected.col+1 ; i < col ; i++ ){
+											if (matrix[row][i] != "  " ){
+												//console.log("有棋");
+												cannon_++
+												//console.log(cannon_);
+											}
+										}
+									}else if ( selected.col > col ){
+										//console.log("selected.col > col");
+										for( let i = selected.col-1 ; i > col ; i-- ){
+											if (matrix[row][i] != "  " ){
+												// console.log("有棋");
+												cannon_++
+												//console.log(cannon_);
+											}
+										}
+									}
+								}else if( selected.col == col ){
+									//console.log("改row");
+									if ( selected.row < row ){
+										//console.log("selected.row < row");
+										for( let i = selected.row+1 ; i < row ; i++ ){
+											if (matrix[i][col] != "  " ){
+												//console.log("有棋");
+												cannon_++
+											}
+										}
+										//console.log(cannon_);
+									}else if ( selected.row > row ){
+										//console.log("selected.row > row");
+										for( let i = selected.row-1 ; i > row ; i-- ){
+											if (matrix[i][col] != "  " ){
+												//console.log("有棋");
+												cannon_++
+											}
+										}
+										//console.log(cannon_);
+									}
+								}
+								if (( matrix[row][col]=="  " )&& ( cannon_ > 0 )){
+									//console.log("return");
+									return;
+								}else if (( matrix[row][col]!="  " )&& (cannon_ !=1 )){
+									//console.log("return");
 									return;
 								}
 							}	
@@ -495,7 +545,9 @@ document.addEventListener('keydown',
 		
 		drawBackground();  //畫背景
 		car_ = 0
-		console.log("row="+row + ",col=" + col + ",selectedRow="+ selected.row + ",selectedCol=" +selected.col)
+		cannon_ = 0
+		console.log(cannon_);
+		//console.log("row="+row + ",col=" + col + ",selectedRow="+ selected.row + ",selectedCol=" +selected.col)
 		
 	}
 	
