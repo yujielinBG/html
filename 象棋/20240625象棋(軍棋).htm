@@ -34,7 +34,7 @@ let cellWidth = 50
 let row = 7
 let col = 4
 
-let whoseTurn = 0
+let steps = 0
 let whatColor = 0
 
 let matrix = []
@@ -193,7 +193,7 @@ window.onload = function() {
 	matrix[9][8] = "紅車";
 	matrix[7][1] = "紅炮";
 	matrix[7][7] = "紅炮";
-	matrix[6][0] = "紅兵";
+	matrix[6][0] = "紅兵"; 
 	matrix[6][2] = "紅兵";
 	matrix[6][4] = "紅兵";
 	matrix[6][6] = "紅兵";
@@ -297,8 +297,9 @@ document.addEventListener('keydown',
 				  //console.log(whatColor);
 				  //console.log(whoseTurn);
 
+
 				  if ( selected.flag == false ) {
-					if ( whatColor == whoseTurn%2 ){
+					if ( whatColor == steps%2 ){
 						//未選擇
 						selected.row = row;
 						selected.col = col;
