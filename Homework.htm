@@ -1,0 +1,89 @@
+<html lang="en">
+	<head>
+	    <title>Homework</title>
+		<meta charset="UTF-8">
+		<style>
+			canvas { border: 1px solid #000; }
+		</style>
+	</head>
+	<body>
+		<canvas id="_Canvas" width="250" height="500"></canvas>
+<!--		
+		<img id="w0625" src="./0625.png" alt="Source Image" style="display:none;" >
+		
+		<img id="select" src="./select.png" alt="Source Image" style="display:none;" >
+		
+		<img id="left" src="./left.png" alt="Source Image" style="display:none;" >
+		
+		<img id="right" src="./right.png" alt="Source Image" style="display:none;" >
+-->		
+	</body>
+</html>
+
+
+<!--
+=======================================================
+   Script
+=======================================================
+-->
+<script>
+
+let arrayDog = [];
+
+/*
+class Block1 {
+    row = 0 ;
+    col = 0 ;
+}
+
+let b1 = new Block1() ;
+b1.row = 100 ;
+b1.col = 200 ;
+console.log( b1 ) ;
+
+let b2 = new Block1() ;
+b2.row = 300;
+b2.col = 400 ;
+console.log( b2 ) ;
+*/
+
+class Dog {
+	height = 1;  //attribute  , method
+	deadCheck() {
+		if ( this.height > 20 ) {
+			console.log("I am died.") ;
+		}
+	}
+	grow( addHeight ) {
+		this.height = this.height + addHeight ;
+		this.deadCheck();
+	}
+
+}
+
+let dd3 = new Dog() ;
+dd3.grow( 3 ) ;
+console.log(dd3) ;
+
+//第一題
+/*
+let dog1 = new Dog();
+dog1.height = 1;
+console.log( dog1 );
+
+let dog2 = new Dog();
+dog2.height = 2;
+console.log( dog2 );
+*/
+
+//第二題
+for ( let i = 0 ; i < 100 ; i++ ){
+	arrayDog[i] = new Dog();
+	arrayDog[i].height = i;
+}
+
+console.log(arrayDog);
+
+
+
+</script> 

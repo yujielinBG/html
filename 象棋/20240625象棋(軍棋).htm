@@ -29,19 +29,19 @@
 -->
 <script>
 
-let cellWidth = 50
+let cellWidth = 50;
 
-let row = 7
-let col = 4
+let row = 7;
+let col = 4;
 
-let steps = 0
-let whatColor = 0
+let steps = 0;
+let whatColor = 0;
 
-let matrix = []
+let matrix = [];
 let selected = new Object() ;
 
-let car_ =0
-let cannon_ =0
+let car_ =0;
+let cannon_ =0;
 
 const canvas = document.getElementById('_Canvas');
 const ctx = canvas.getContext('2d');	
@@ -84,7 +84,7 @@ function drawBackground() {
 	ctx.moveTo(6*cellWidth, 8*cellWidth);  
 	ctx.lineTo(4*cellWidth, 10*cellWidth); 
 
-	ctx.stroke();	
+	ctx.stroke();
 
 
 	ctx.beginPath();
@@ -308,7 +308,7 @@ document.addEventListener('keydown',
 					}
 					} else {
 						//已選擇但同色重選
-						if ( whatColor == whoseTurn%2 ){
+						if ( whatColor == steps%2 ){
 							//console.log("change");
 							selected.row = row;
 							selected.col = col;
@@ -527,7 +527,7 @@ document.addEventListener('keydown',
 								}
 							}
 
-							whoseTurn++;
+							steps++;
 							selected.flag = false ;
 							matrix[row][col] = matrix[selected.row][selected.col];
 							matrix[selected.row][selected.col] = "  " ;
