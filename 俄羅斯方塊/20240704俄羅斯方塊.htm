@@ -57,6 +57,18 @@ function drawBackground(){
         ctx.lineTo(width*cellWidth, j*cellWidth); 
     }
 
+    for (let row = 0; row < matrix.length; row++) {
+		for (let col = 0; col < matrix[row].length; col++) {
+            //console.log("for");
+            if( matrix[row][col] ==1 ){
+                //console.log("if");
+                ctx.fillRect(col*cellWidth, row*cellWidth, cellWidth, cellWidth)
+            }
+            
+			
+		}
+	}
+
     ctx.stroke();
 
 }
@@ -71,19 +83,29 @@ class Shape {
     constructor( name ) {
         this.name = name ;
     }
-
+    
     moveRight(){
-        this.col++;
+        if (this.check( this.row, this.col+1, this.index)){
+            this.col++;
+        }
     }
     moveLeft(){
-        this.col--;
+        if (this.check( this.row, this.col-1, this.index)){
+            this.col--;
+        }
     }
     moveDown(){
-        this.row++;
+        if (this.check( this.row+1, this.col, this.index)){
+            this.row++;
+        }
     }
     rotation(){
+        let oldIndex = this.index ;
         if ( ++this.index >= this.pictures.length ) {
             this.index = 0 ;
+        }
+        if (!this.check( this.row, this.col, this.index)){
+            this.index = oldIndex ;
         }
     }
     draw(){
@@ -94,8 +116,41 @@ class Shape {
             ctx.fillRect(newCol*cellWidth, newRow*cellWidth, cellWidth, cellWidth)
         }
     }
+    save() {
+        let points = this.pictures[this.index] ;
+        for( let i=0; i<points.length; i++){
+            let point = points[i] ;
+            let pRow = this.row + point.row ;
+            let pCol = this.col + point.col ;
+            matrix[pRow][pCol]=1;
+        }        
+        this.row = 0 ;
+        this.col = 0 ;
+    }
+    check( nextRow , nextCol , nextIndex ){
+        let points = this.pictures[nextIndex] ;
+        for( let i=0; i<points.length; i++){
+            let point = points[i] ;
+            let pRow = nextRow + point.row ;
+            let pCol = nextCol + point.col ;
+            if ( pRow >= height  ) {
+                return false ;
+            }
+            if ( pCol < 0 || pCol >= width ) {
+                return false ;
+            }
+            //console.log(matrix);
+            //console.log(pRow);
+            //console.log(pCol);
+            if ( matrix[pRow][pCol] != 0 ) {
+                return false ;
+            } 
+        }
+        return true ;
+    }
 
 }
+
 
 class Point {
     row = 0;
@@ -155,7 +210,7 @@ shapeJ.pictures[3] = ary  ;
 
 console.log(shapeJ);
 
-
+/*
 class TypeI {
     moveRight(){
         this.col++
@@ -492,7 +547,7 @@ class TypeZ {
     col =4;
     state = 0;
 }
-
+*/
 
 //陣列(初始化)
 for (let row = 0; row < 20; row++) {
@@ -503,10 +558,13 @@ for (let row = 0; row < 20; row++) {
     }
 }
 
+
 //let typeI = new TypeI();
 //typeI.draw();
 let nowShape = shapeJ ;
 nowShape.draw();
+
+console.log(matrix);
 
 drawBackground();
 
@@ -532,6 +590,11 @@ document.addEventListener('keydown',
             case 'Space':
 				  //console.log('Space key pressed.');
 				  nowShape.rotation();
+				  break;
+
+            case 'KeyS':
+				  console.log('s key pressed.');
+				  nowShape.save();
 				  break;
                 
 
