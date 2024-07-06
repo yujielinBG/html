@@ -33,6 +33,7 @@ let width = 10;
 let height = 20;
 
 let matrix = [];
+let shape = [];
 
 const canvas = document.getElementById('_Canvas');
 const ctx = canvas.getContext('2d');	
@@ -151,7 +152,6 @@ class Shape {
 
 }
 
-
 class Point {
     row = 0;
     col = 0;
@@ -176,7 +176,7 @@ ary[ary.length] = new Point( 0, 5 ) ;
 ary[ary.length] = new Point( 0, 6 ) ;
 shapeI.pictures[1] = ary  ;
 
-console.log(shapeI);
+//console.log(shapeI);
 
 
 let shapeJ = new Shape("J") ;
@@ -208,346 +208,117 @@ ary[ary.length] = new Point( 0, 5 ) ;
 ary[ary.length] = new Point( 0, 6 ) ;
 shapeJ.pictures[3] = ary  ;
 
-console.log(shapeJ);
+//console.log(shapeJ);\
 
-/*
-class TypeI {
-    moveRight(){
-        this.col++
-    }
-    moveLeft(){
-        this.col--
-    }
-    moveDown(){
-        this.row++
-    }
-    rotation(){
-        if( this.state == 0 ){
+let shapeL = new Shape("L") ;
+ary = [] ;
+ary[ary.length] = new Point( 0, 4 ) ;
+ary[ary.length] = new Point( 1, 4 ) ;
+ary[ary.length] = new Point( 2, 4 ) ;
+ary[ary.length] = new Point( 2, 5 ) ;
+shapeL.pictures[0] = ary  ;
 
-        }else if( this.state == 1 ){
+ary = [] ;
+ary[ary.length] = new Point( 1, 6 ) ;
+ary[ary.length] = new Point( 0, 4 ) ;
+ary[ary.length] = new Point( 0, 5 ) ;
+ary[ary.length] = new Point( 0, 6 ) ;
+shapeL.pictures[1] = ary  ;
 
-        }
-        if ( ++this.state > 1 ) {
-            this.state = 0 ;
-        }
-    }
-    draw(){
-        switch( this.state ) {
-            case 0:
-                ctx.fillStyle = 'black'
-                ctx.fillRect((this.col)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col)*cellWidth, (this.row+2)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col)*cellWidth, (this.row+3)*cellWidth, cellWidth, cellWidth)
-                break;
-            case 1:
-            ctx.fillStyle = 'black'
-                ctx.fillRect((this.col)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+2)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+3)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                break;
-        }
-    }
-    row = 0;
-    col = 4;
-    state = 0;
-}
+ary = [] ;
+ary[ary.length] = new Point( 0, 4 ) ;
+ary[ary.length] = new Point( 0, 5 ) ;
+ary[ary.length] = new Point( 1, 5 ) ;
+ary[ary.length] = new Point( 2, 5 ) ;
+shapeL.pictures[2] = ary  ;
 
-class TypeJ {
-    moveRight(){
-        this.col++
-    }
-    moveLeft(){
-        this.col--
-    }
-    moveDown(){
-        this.row++
-    }
-    rotation(){
-        if( this.state == 0 ){
+ary = [] ;
+ary[ary.length] = new Point( 0, 6 ) ;
+ary[ary.length] = new Point( 1, 4 ) ;
+ary[ary.length] = new Point( 1, 5 ) ;
+ary[ary.length] = new Point( 1, 6 ) ;
+shapeL.pictures[3] = ary  ;
 
-        }else if( this.state == 1 ){
+let shapeO = new Shape("O") ;
+ary = [] ;
+ary[ary.length] = new Point( 0, 4 ) ;
+ary[ary.length] = new Point( 0, 5 ) ;
+ary[ary.length] = new Point( 1, 4 ) ;
+ary[ary.length] = new Point( 1, 5 ) ;
+shapeO.pictures[0] = ary  ;
 
-        }else if( this.state == 2 ){
+let shapeS = new Shape("S") ;
+ary = [] ;
+ary[ary.length] = new Point( 1, 4 ) ;
+ary[ary.length] = new Point( 1, 5 ) ;
+ary[ary.length] = new Point( 0, 6 ) ;
+ary[ary.length] = new Point( 0, 5 ) ;
+shapeS.pictures[0] = ary  ;
 
-        }else if( this.state == 3 ){
+ary = [] ;
+ary[ary.length] = new Point( 0, 4 ) ;
+ary[ary.length] = new Point( 1, 4 ) ;
+ary[ary.length] = new Point( 1, 5 ) ;
+ary[ary.length] = new Point( 2, 5 ) ;
+shapeS.pictures[1] = ary  ;
 
-        }
-        if ( ++this.state > 3 ) {
-            this.state = 0 ;
-        }
-    }
-    draw(){
-        switch( this.state ) {
-            case 0:
-                ctx.fillStyle = 'black'
-                ctx.fillRect((this.col)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col)*cellWidth, (this.row+2)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col-1)*cellWidth, (this.row+2)*cellWidth, cellWidth, cellWidth)
-                break;
-            case 1:
-            ctx.fillStyle = 'black'
-                ctx.fillRect((this.col-1)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col-1)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect(this.col*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                break;
-            case 2:
-                ctx.fillStyle = 'black'
-                ctx.fillRect((this.col-1)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col-1)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col-1)*cellWidth, (this.row+2)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                break;
-            case 3:
-            ctx.fillStyle = 'black'
-                ctx.fillRect((this.col-1)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                break;
-        }
-    }
-    row = 0;
-    col = 5;
-    state = 0;
-}
+let shapeT = new Shape("T") ;
+ary = [] ;
+ary[ary.length] = new Point( 0, 4 ) ;
+ary[ary.length] = new Point( 0, 5 ) ;
+ary[ary.length] = new Point( 0, 6 ) ;
+ary[ary.length] = new Point( 1, 5 ) ;
+shapeT.pictures[0] = ary  ;
 
-class TypeL {
-    moveRight(){
-        this.col++
-    }
-    moveLeft(){
-        this.col--
-    }
-    moveDown(){
-        this.row++
-    }
-    rotation(){
-        if( this.state == 0 ){
+ary = [] ;
+ary[ary.length] = new Point( 1, 4 ) ;
+ary[ary.length] = new Point( 0, 5 ) ;
+ary[ary.length] = new Point( 1, 5 ) ;
+ary[ary.length] = new Point( 2, 5 ) ;
+shapeT.pictures[1] = ary  ;
 
-        }else if( this.state == 1 ){
+ary = [] ;
+ary[ary.length] = new Point( 0, 5 ) ;
+ary[ary.length] = new Point( 1, 4 ) ;
+ary[ary.length] = new Point( 1, 5 ) ;
+ary[ary.length] = new Point( 1, 6 ) ;
+shapeT.pictures[2] = ary  ;
 
-        }else if( this.state == 2 ){
+ary = [] ;
+ary[ary.length] = new Point( 0, 4 ) ;
+ary[ary.length] = new Point( 1, 4 ) ;
+ary[ary.length] = new Point( 2, 4 ) ;
+ary[ary.length] = new Point( 1, 5 ) ;
+shapeT.pictures[3] = ary  ;
 
-        }else if( this.state == 3 ){
+let shapeZ = new Shape("Z") ;
+ary = [] ;
+ary[ary.length] = new Point( 0, 4 ) ;
+ary[ary.length] = new Point( 0, 5 ) ;
+ary[ary.length] = new Point( 1, 5 ) ;
+ary[ary.length] = new Point( 1, 6 ) ;
+shapeZ.pictures[0] = ary  ;
 
-        }
-        if ( ++this.state > 3 ) {
-            this.state = 0 ;
-        }
-    }
-    draw(){
-        switch( this.state ) {
-            case 0:
-                ctx.fillStyle = 'black'
-                ctx.fillRect((this.col)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col)*cellWidth, (this.row+2)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row+2)*cellWidth, cellWidth, cellWidth)
-                break;
-            case 1:
-            ctx.fillStyle = 'black'
-                ctx.fillRect((this.col-1)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col-1)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                break;
-            case 2:
-                ctx.fillStyle = 'black'
-                ctx.fillRect((this.col+1)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row+2)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                break;
-            case 3:
-            ctx.fillStyle = 'black'
-                ctx.fillRect((this.col-1)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                break;
-        }
-    }
-    row = 0;
-    col = 4;
-    state = 0;
-}
+ary = [] ;
+ary[ary.length] = new Point( 0, 5 ) ;
+ary[ary.length] = new Point( 1, 4 ) ;
+ary[ary.length] = new Point( 1, 5 ) ;
+ary[ary.length] = new Point( 2, 4 ) ;
+shapeZ.pictures[1] = ary  ;
 
-class TypeO {
-    moveRight(){
-        this.col++
-    }
-    moveLeft(){
-        this.col--
-    }
-    moveDown(){
-        this.row++
-    }
-    rotation(){
-        
-    }
-    draw(){
-        ctx.fillStyle = 'black'
-        ctx.fillRect((this.col)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-        ctx.fillRect((this.col)*cellWidth,(this.row+1)*cellWidth, cellWidth, cellWidth)
-        ctx.fillRect((this.col+1)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-        ctx.fillRect((this.col+1)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-    }
-    row = 0;
-    col = 4;
-    state = 0;
-}
 
-class TypeS {
-    moveRight(){
-        this.col++
-    }
-    moveLeft(){
-        this.col--
-    }
-    moveDown(){
-        this.row++
-    }
-    rotation(){
-        if( this.state == 0 ){
+shape[0] = shapeI ;
+shape[1] = shapeJ ;
+shape[2] = shapeL ;
+shape[3] = shapeO ;
+shape[4] = shapeS ;
+shape[5] = shapeT ;
+shape[6] = shapeZ ;
 
-        }else if( this.state == 1 ){
 
-        }
-        if ( ++this.state > 1 ) {
-            this.state = 0 ;
-        }
-    }
-    draw(){
-        switch( this.state ) {
-            case 0:
-                ctx.fillStyle = 'black'
-                ctx.fillRect((this.col)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+2)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                break;
-            case 1:
-            ctx.fillStyle = 'black'
-                ctx.fillRect((this.col)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row+2)*cellWidth, cellWidth, cellWidth)
-                break;
-        }
-    }
-    row = 0;
-    col =4;
-    state = 0;
-}
+console.log(shape);
 
-class TypeT {
-    moveRight(){
-        this.col++
-    }
-    moveLeft(){
-        this.col--
-    }
-    moveDown(){
-        this.row++
-    }
-    rotation(){
-        if( this.state == 0 ){
-
-        }else if( this.state == 1 ){
-
-        }else if( this.state == 2 ){
-
-        }else if( this.state == 3 ){
-
-        }
-        if ( ++this.state > 3 ) {
-            this.state = 0 ;
-        }
-    }
-    draw(){
-        switch( this.state ) {
-            case 0:
-                ctx.fillStyle = 'black'
-                ctx.fillRect((this.col)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+2)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                break;
-            case 1:
-            ctx.fillStyle = 'black'
-                ctx.fillRect((this.col+1)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row+2)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                break;
-            case 2:
-                ctx.fillStyle = 'black'
-                ctx.fillRect((this.col+1)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+2)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                break;
-            case 3:
-            ctx.fillStyle = 'black'
-                ctx.fillRect((this.col)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col)*cellWidth, (this.row+2)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                break;
-        }
-    }
-    row = 0;
-    col = 4;
-    state = 0;
-}
-
-class TypeZ {
-    moveRight(){
-        this.col++
-    }
-    moveLeft(){
-        this.col--
-    }
-    moveDown(){
-        this.row++
-    }
-    rotation(){
-        if( this.state == 0 ){
-
-        }else if( this.state == 1 ){
-
-        }
-        if ( ++this.state > 1 ) {
-            this.state = 0 ;
-        }
-    }
-    draw(){
-        switch( this.state ) {
-            case 0:
-                ctx.fillStyle = 'black'
-                ctx.fillRect((this.col)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+2)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                break;
-            case 1:
-            ctx.fillStyle = 'black'
-                ctx.fillRect((this.col+1)*cellWidth, (this.row)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col+1)*cellWidth, (this.row+1)*cellWidth, cellWidth, cellWidth)
-                ctx.fillRect((this.col)*cellWidth, (this.row+2)*cellWidth, cellWidth, cellWidth)
-                break;
-        }
-    }
-    row = 0;
-    col =4;
-    state = 0;
-}
-*/
+let whatShape =Math.floor(Math.random()*shape.length);
 
 //陣列(初始化)
 for (let row = 0; row < 20; row++) {
@@ -559,10 +330,10 @@ for (let row = 0; row < 20; row++) {
 }
 
 
-//let typeI = new TypeI();
-//typeI.draw();
-let nowShape = shapeJ ;
+let nowShape = shape[whatShape] ;
 nowShape.draw();
+
+console.log(whatShape);
 
 console.log(matrix);
 
@@ -595,13 +366,43 @@ document.addEventListener('keydown',
             case 'KeyS':
 				  console.log('s key pressed.');
 				  nowShape.save();
+                  let whatShape =Math.floor(Math.random()*shape.length);
+                  nowShape = shape[whatShape] ;
+                  console.log(whatShape);
 				  break;
                 
 
         }
+        let k = [] ;
+        for(let i=0;i<matrix.length;i++){
+            let l = 0 ;
+            for(let j=0;j<matrix[i].length;j++){
+                if(matrix[i][j]==1){
+                    l++ ;
+                }
+            }    
+            if(l==matrix[i].length){
+                k[i]=1;
+            }else if(l!=matrix[i].length){
+                k[i]=0;
+            }
+            console.log(k);
+            console.log(l);
+        }
+        for(let i=0;i<matrix.length;i++){
+            if(k[i]==1){
+                for(let m=0;m<matrix[i].length;m++){
+                    for(let n=i;n>0;n--){
+                        matrix[n][m]=matrix[n-1][m];
+                    }
+                    //matrix[i][m]=matrix[i-1][m];
+                }
+            }
+        }
         clean();
         nowShape.draw();
         drawBackground();
+        console.log(matrix);
     }
 );
 
