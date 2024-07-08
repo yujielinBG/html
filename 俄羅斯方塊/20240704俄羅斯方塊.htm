@@ -288,11 +288,6 @@ class Shape {
                 }
             }
         }
-        for(let i = 0 ;i<matrix[0].length; i++ ){
-            if(matrix[0][i]==1){
-                game.stop();
-            }
-        }
         nowShape = shape[Math.floor(Math.random()*shape.length)] ;    
         nowShape.row = -4 ;
         nowShape.col = 0 ;
