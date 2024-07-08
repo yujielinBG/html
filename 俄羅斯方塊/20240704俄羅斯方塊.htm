@@ -7,16 +7,17 @@
 		</style>
 	</head>
 	<body>
+        <div>
+            <table width="100%"><tr>
+                <td><div id="score">Score:</div></td>
+                <td><div id="speed">Speed:</div></td>
+            </tr></table>
 		<canvas id="_Canvas" width="250" height="500"></canvas>
-<!--		
-		<img id="w0625" src="./0625.png" alt="Source Image" style="display:none;" >
-		
-		<img id="select" src="./select.png" alt="Source Image" style="display:none;" >
-		
-		<img id="left" src="./left.png" alt="Source Image" style="display:none;" >
-		
-		<img id="right" src="./right.png" alt="Source Image" style="display:none;" >
--->		
+        </div>
+        開始:a
+        暫停:s
+        繼續:d
+        結束:f
 	</body>
 </html>
 
@@ -28,9 +29,10 @@
 -->
 <script>
 
-let cellWidth = 25;
-let width = 10;
-let height = 20;
+const cellWidth = 25;
+const width = 10;
+const height = 20;
+
 const STATE_STOP = 0;
 const STATE_RUN = 1;
 const STATE_SUSPEND = 2;
@@ -43,6 +45,9 @@ const ctx = canvas.getContext('2d');
 
 class Game {
     state = STATE_STOP ;
+    count = 0 ;
+    levelAry = [400,350,300,250,200,160,120,100,80] ;
+    level = 0 ;
     
     constructor() {
         document.addEventListener('keydown', this.keyEvents.bind(this) ) ;
@@ -68,7 +73,7 @@ class Game {
         }
         nowShape.moveDown() ;
 
-        setTimeout( this.autoDown.bind(this), 500) ;
+        setTimeout( this.autoDown.bind(this), this.levelAry[this.level] ) ;
     }
 
     start(){
@@ -77,8 +82,9 @@ class Game {
             return ;
         }
         this.state = STATE_RUN ;
+        this.level = 0 ;
         this.init() ;
-        setTimeout( this.autoDown.bind(this), 500) ;
+        setTimeout( this.autoDown.bind(this), this.levelAry[this.level]) ;
     }
     suspend(){
         if ( this.state != STATE_RUN ) {
@@ -91,7 +97,7 @@ class Game {
             return ;
         }
         this.state = STATE_RUN ;
-        setTimeout( this.autoDown.bind(this), 500) ;
+        setTimeout( this.autoDown.bind(this), this.levelAry[this.level]) ;
     }
     stop(){
         if ( this.state != STATE_RUN ) {
@@ -291,6 +297,13 @@ class Shape {
         nowShape = shape[Math.floor(Math.random()*shape.length)] ;    
         nowShape.row = -4 ;
         nowShape.col = 0 ;
+        if ( ++game.count % 25  == 0 ) {
+            game.level+= 1 ; 
+        }
+        let scoreObj = document.getElementById("score") ;
+        scoreObj.innerText = `Score:${game.count}` ;
+        let speedObj = document.getElementById("speed") ;
+        speedObj.innerText = `Speed:${game.level+1}` ;
     }
     check( nextRow , nextCol , nextIndex ){
         let points = this.pictures[nextIndex] ;
@@ -383,7 +396,7 @@ ary[ary.length] = new Point( 2, 5 ) ;
 shapeL.pictures[0] = ary  ;
 
 ary = [] ;
-ary[ary.length] = new Point( 1, 6 ) ;
+ary[ary.length] = new Point( 1, 4 ) ;
 ary[ary.length] = new Point( 0, 4 ) ;
 ary[ary.length] = new Point( 0, 5 ) ;
 ary[ary.length] = new Point( 0, 6 ) ;
