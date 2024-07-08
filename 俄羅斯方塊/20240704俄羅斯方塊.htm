@@ -31,12 +31,134 @@
 let cellWidth = 25;
 let width = 10;
 let height = 20;
+const STATE_STOP = 0;
+const STATE_RUN = 1;
+const STATE_SUSPEND = 2;
 
 let matrix = [];
 let shape = [];
 
 const canvas = document.getElementById('_Canvas');
 const ctx = canvas.getContext('2d');	
+
+class Game {
+    state = STATE_STOP ;
+    
+    constructor() {
+        document.addEventListener('keydown', this.keyEvents.bind(this) ) ;
+
+    }
+    init() {
+        nowShape = shape[Math.floor(Math.random()*shape.length)] ;
+        nowShape.row = -4 ;
+        nowShape.col = 0 ;
+        //陣列(初始化)
+        for (let row = 0; row < 20; row++) {
+            matrix[row] = [];
+
+            for (let col = 0; col < 10; col++) {
+                matrix[row][col] = 0; 
+            }
+        }
+    }
+
+    autoDown() {
+        if ( this.state != STATE_RUN ) {
+            return ;
+        }
+        nowShape.moveDown() ;
+
+        setTimeout( this.autoDown.bind(this), 500) ;
+    }
+
+    start(){
+        console.log("start()");
+        if ( this.state != STATE_STOP ) {
+            return ;
+        }
+        this.state = STATE_RUN ;
+        this.init() ;
+        setTimeout( this.autoDown.bind(this), 500) ;
+    }
+    suspend(){
+        if ( this.state != STATE_RUN ) {
+            return ;
+        }
+        this.state = STATE_SUSPEND ;
+    }
+    resume(){
+        if ( this.state != STATE_SUSPEND ) {
+            return ;
+        }
+        this.state = STATE_RUN ;
+        setTimeout( this.autoDown.bind(this), 500) ;
+    }
+    stop(){
+        if ( this.state != STATE_RUN ) {
+            return ;
+        }
+        this.state = STATE_STOP ;
+    }
+
+	keyEvents(event) {
+		switch(event.code) {
+            case 'ArrowDown':
+                //console.log('Down arrow key pressed.');
+                if( this.state!= STATE_RUN){
+                    return;
+                }
+                nowShape.moveDown();
+                break;
+            case 'ArrowLeft':
+                //console.log('Left arrow key pressed.');
+                if( this.state!= STATE_RUN){
+                    return;
+                }
+                nowShape.moveLeft();
+                break;
+                
+            case 'ArrowRight':
+                //console.log('Right arrow key pressed.');
+                if( this.state!= STATE_RUN){
+                    return;
+                }
+                nowShape.moveRight();
+                break;
+
+            case 'Space':
+                //console.log('Space key pressed.');
+                if( this.state!= STATE_RUN){
+                    return;
+                }
+                nowShape.rotation();
+                break;
+
+            case 'KeyA':
+				//console.log('S key pressed.');
+				this.start();
+				break;
+
+            case 'KeyS':
+				//console.log('Space key pressed.');
+				this.suspend();
+				break;
+
+            case 'KeyD':
+				//console.log('Space key pressed.');
+				this.resume();
+				break;
+
+            case 'KeyF':
+				//console.log('Space key pressed.');
+				this.stop();
+				break;
+
+        }
+
+    }
+
+
+}
 
 function clean(){
     ctx.fillStyle = 'white';
@@ -77,9 +199,10 @@ function drawBackground(){
 class Shape {
     name = "" ; //I, L
     pictures = [] ;  
-    row = 0;
+    row = -4;
     col = 0;
     index = 0;
+
 
     constructor( name ) {
         this.name = name ;
@@ -89,11 +212,13 @@ class Shape {
         if (this.check( this.row, this.col+1, this.index)){
             this.col++;
         }
+        this.draw();
     }
     moveLeft(){
         if (this.check( this.row, this.col-1, this.index)){
             this.col--;
         }
+        this.draw();
     }
     moveDown(){
         if (this.check( this.row+1, this.col, this.index)){
@@ -101,6 +226,7 @@ class Shape {
         }else {
             this.save();
         }
+        this.draw();
     }
     rotation(){
         let oldIndex = this.index ;
@@ -110,14 +236,17 @@ class Shape {
         if (!this.check( this.row, this.col, this.index)){
             this.index = oldIndex ;
         }
+        this.draw();
     }
     draw(){
+        clean();
         ctx.fillStyle = 'black';
         for( let i=0; i<this.pictures[this.index].length; i++ ) {
             let newCol = this.col+this.pictures[this.index][i].col ;
             let newRow = this.row+this.pictures[this.index][i].row ;
             ctx.fillRect(newCol*cellWidth, newRow*cellWidth, cellWidth, cellWidth)
         }
+        drawBackground();
     }
     save() {
         let points = this.pictures[this.index] ;
@@ -125,13 +254,13 @@ class Shape {
             let point = points[i] ;
             let pRow = this.row + point.row ;
             let pCol = this.col + point.col ;
+            if ( pRow < 0 ) {
+                game.stop();
+                return;
+            }
             matrix[pRow][pCol]=1;
         }        
-        this.row = 0 ;
-        this.col = 0 ;
 
-        let whatShape =Math.floor(Math.random()*shape.length);
-        nowShape = shape[whatShape] ;
 
         let k = [] ;
         for(let i=0;i<matrix.length;i++){
@@ -159,6 +288,14 @@ class Shape {
                 }
             }
         }
+        for(let i = 0 ;i<matrix[0].length; i++ ){
+            if(matrix[0][i]==1){
+                game.stop();
+            }
+        }
+        nowShape = shape[Math.floor(Math.random()*shape.length)] ;    
+        nowShape.row = -4 ;
+        nowShape.col = 0 ;
     }
     check( nextRow , nextCol , nextIndex ){
         let points = this.pictures[nextIndex] ;
@@ -175,7 +312,7 @@ class Shape {
             //console.log(matrix);
             //console.log(pRow);
             //console.log(pCol);
-            if ( matrix[pRow][pCol] != 0 ) {
+            if ( pRow >= 0 && matrix[pRow][pCol] != 0 ) {
                 return false ;
             } 
         }
@@ -347,72 +484,10 @@ shape[4] = shapeS ;
 shape[5] = shapeT ;
 shape[6] = shapeZ ;
 
+let nowShape = shape[Math.floor(Math.random()*shape.length)] ;
 
 console.log(shape);
 
-let whatShape =Math.floor(Math.random()*shape.length);
-
-//陣列(初始化)
-for (let row = 0; row < 20; row++) {
-    matrix[row] = [];
-
-    for (let col = 0; col < 10; col++) {
-        matrix[row][col] = 0; 
-    }
-}
-
-
-let nowShape = shape[whatShape] ;
-nowShape.draw();
-
-console.log(whatShape);
-
-console.log(matrix);
-
-drawBackground();
-
-function autoDown() {
-    nowShape.moveDown() ;
-    clean();
-    nowShape.draw();
-    drawBackground();
-    console.log(matrix);
-    setTimeout( autoDown, 500) ;
-}
-
-setTimeout( autoDown, 1000) ;
-
-document.addEventListener('keydown', 
-	function(event) {
-		switch(event.code) {
-				  
-			case 'ArrowDown':
-				  //console.log('Down arrow key pressed.');
-                  nowShape.moveDown();
-				  break;
-				  
-			case 'ArrowLeft':
-				  //console.log('Left arrow key pressed.');
-				  nowShape.moveLeft();
-				  break;
-				  
-			case 'ArrowRight':
-				  //console.log('Right arrow key pressed.');
-				  nowShape.moveRight();
-				  break;
-
-            case 'Space':
-				  //console.log('Space key pressed.');
-				  nowShape.rotation();
-				  break;
-
-        }
-        
-        clean();
-        nowShape.draw();
-        drawBackground();
-        console.log(matrix);
-    }
-);
+let game = new Game() ;
 
 </script> 
