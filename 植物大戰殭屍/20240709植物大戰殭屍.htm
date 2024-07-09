@@ -1,0 +1,64 @@
+<html lang="en">
+    <head>
+        <title>植物大戰殭屍</title>
+        <meta charset="UTF-8">
+        <style>
+            canvas {border: 1px solid #000; }
+        </style>
+    </head>
+    <body>
+        <div>
+            <canvas id="_Canvas" width="630" height="490"></canvas>
+        </div>
+        <img id="sunflower" src="./flower.png" alt="Source Image" style="display:none;" >
+        <img id="plant" src="./plant.png" alt="Source Image" style="display:none;" >
+        <img id="bullet" src="./leaf.png" alt="Source Image" style="display:none;" >
+    </body>
+</html>
+
+<!--
+=======================================================
+   Script
+=======================================================
+-->
+<script>
+
+const CELLWIDTH = 70 ;
+
+const canvas = document.getElementById('_Canvas');
+const ctx = canvas.getContext('2d');
+
+ctx.fillStyle = 'green';
+ctx.fillRect( 0 , 0 , 630 , 350 );
+ctx.beginPath();
+ctx.strokeStyle = 'gray';
+ctx.lineWidth = 1.5 ;
+for( let i = 0 ; i < 9+1 ; i++ ){
+    ctx.moveTo( i*CELLWIDTH , 0*CELLWIDTH );
+    ctx.lineTo( i*CELLWIDTH , 5*CELLWIDTH );
+}
+ctx.stroke();
+ctx.strokeStyle = 'black';
+for( let i = 0 ; i < 5+1+1 ; i++ ){
+    if( i == 6 ){
+        ctx.lineWidth = 4 ;
+    }else{
+        ctx.lineWidth = 2 ;
+    }
+    ctx.beginPath();
+    ctx.moveTo( 0*CELLWIDTH , i*CELLWIDTH );
+    ctx.lineTo( 9*CELLWIDTH , i*CELLWIDTH );
+    ctx.stroke();
+}
+ctx.beginPath();
+ctx.strokeStyle = 'black';
+ctx.lineWidth = 3 ;
+for( let i = 0 ; i < 9+1 ; i++ ){
+    ctx.moveTo( i*CELLWIDTH , 6*CELLWIDTH );
+    ctx.lineTo( i*CELLWIDTH , 7*CELLWIDTH );
+}
+ctx.stroke();
+
+
+
+</script>
