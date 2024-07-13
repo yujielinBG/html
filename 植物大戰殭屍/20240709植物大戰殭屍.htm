@@ -8,16 +8,23 @@
     </head>
     <body>
         <div>
-            <canvas id="_Canvas" width="700" height="490"></canvas>
+            <canvas id="_Canvas" width="1000" height="700"></canvas>
         </div>
-        <img id="sunflower" src="./flower.png" alt="Source Image" style="display:none;" >
-        <img id="plant" src="./plant.png" alt="Source Image" style="display:none;" >
-        <img id="bullet" src="./leaf.png" alt="Source Image" style="display:none;" >
-        <img id="sun" src="./sun.png" alt="Source Image" style="display:none;" >
-        <img id="slowZombie" src="./halloween.png" alt="Source Image" style="display:none;" >
-        <img id="angryZombie" src="./running.png" alt="Source Image" style="display:none;" >
-        <img id="rock" src="./rocks.png" alt="Source Image" style="display:none;" >
-        <img id="cart" src="./shopping-cart.png" alt="Source Image" style="display:none;" >
+        <img id="sunflower_P" src="./flower.png" alt="Source Image" style="display:none;" >
+        <img id="plant_P" src="./plant.png" alt="Source Image" style="display:none;" >
+        <img id="bullet_P" src="./leaf.png" alt="Source Image" style="display:none;" >
+        <img id="sun_P" src="./sun.png" alt="Source Image" style="display:none;" >
+        <img id="slowZombie_1_P" src="./halloween.png" alt="Source Image" style="display:none;" >
+        <img id="angryZombie_1_P" src="./running.png" alt="Source Image" style="display:none;" >
+        <img id="slowZombie_2_P" src="./halloween - 複製.png" alt="Source Image" style="display:none;" >
+        <img id="angryZombie_2_P" src="./running - 複製.png" alt="Source Image" style="display:none;" >
+        <img id="rock_P" src="./rocks.png" alt="Source Image" style="display:none;" >
+        <img id="cart_P" src="./shopping-cart.png" alt="Source Image" style="display:none;" >
+
+        開始:a
+        暫停:s
+        繼續:d
+        結束:f
     </body>
 </html>
 
@@ -28,76 +35,234 @@
 -->
 <script>
 
-const CELLWIDTH = 70 ;
+const CELLWIDTH = 100 ;
+
+const STATE_STOP = 0;
+const STATE_RUN = 1;
 
 const canvas = document.getElementById('_Canvas');
 const ctx = canvas.getContext('2d');
 
-ctx.fillStyle = 'green';
-ctx.fillRect( 0 , 0 , CELLWIDTH*9+CELLWIDTH , CELLWIDTH*5 );
-ctx.beginPath();
-ctx.strokeStyle = 'gray';
-ctx.lineWidth = 1.5 ;
-for( let i = 0 ; i < 9+1 ; i++ ){
-    ctx.moveTo( i*CELLWIDTH+CELLWIDTH , 0*CELLWIDTH );
-    ctx.lineTo( i*CELLWIDTH+CELLWIDTH , 5*CELLWIDTH );
+
+class Game{
+    state = STATE_STOP ;
+    constructor() {
+        document.addEventListener('keydown', this.keyEvents.bind(this) ) ;
+    }
+    init(){}
+    start(){
+        this.state = STATE_RUN ;
+        time();
+    }
+    suspend(){
+        this.state = STATE_STOP ;
+        console.log( this.state );
+    }
+    resume(){
+        this.state = STATE_RUN ;
+        time();
+    }
+    stop(){
+        this.state = STATE_STOP ;
+    }
+    keyEvents(event) {
+		switch(event.code) {
+            case 'KeyA':
+				//console.log('S key pressed.');
+				this.start();
+				break;
+
+            case 'KeyS':
+				//console.log('Space key pressed.');
+				this.suspend();
+				break;
+
+            case 'KeyD':
+				//console.log('Space key pressed.');
+				this.resume();
+				break;
+
+            case 'KeyF':
+				//console.log('Space key pressed.');
+				this.stop();
+				break;
+        }
+    }
 }
-ctx.stroke();
-ctx.strokeStyle = 'black';
-for( let i = 0 ; i < 5+1+2 ; i++ ){
-    if( i >= 6 ){
-        ctx.lineWidth = 4 ;
-    }else{
-        ctx.lineWidth = 2 ;
+let game = new Game();
+
+function drawBackground(){
+    ctx.fillStyle = 'green';
+    ctx.fillRect( 0 , 0 , CELLWIDTH*9+CELLWIDTH , CELLWIDTH*5 );
+    ctx.beginPath();
+    ctx.strokeStyle = 'gray';
+    ctx.lineWidth = 1.5 ;
+    for( let i = 0 ; i < 9+1 ; i++ ){
+        ctx.moveTo( i*CELLWIDTH+CELLWIDTH , 0*CELLWIDTH );
+        ctx.lineTo( i*CELLWIDTH+CELLWIDTH , 5*CELLWIDTH );
+    }
+    ctx.stroke();
+    ctx.strokeStyle = 'black';
+    for( let i = 0 ; i < 5+1+2 ; i++ ){
+        if( i >= 6 ){
+            ctx.lineWidth = 4 ;
+        }else{
+            ctx.lineWidth = 2 ;
+        }
+        ctx.beginPath();
+        ctx.moveTo( 0*CELLWIDTH+CELLWIDTH , i*CELLWIDTH );
+        ctx.lineTo( 9*CELLWIDTH+CELLWIDTH , i*CELLWIDTH );
+        ctx.stroke();
     }
     ctx.beginPath();
-    ctx.moveTo( 0*CELLWIDTH+CELLWIDTH , i*CELLWIDTH );
-    ctx.lineTo( 9*CELLWIDTH+CELLWIDTH , i*CELLWIDTH );
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 3 ;
+    for( let i = 0 ; i < 9+1 ; i++ ){
+        ctx.moveTo( i*CELLWIDTH+CELLWIDTH , 6*CELLWIDTH );
+        ctx.lineTo( i*CELLWIDTH+CELLWIDTH , 7*CELLWIDTH );
+    }
     ctx.stroke();
-}
-ctx.beginPath();
-ctx.strokeStyle = 'black';
-ctx.lineWidth = 3 ;
-for( let i = 0 ; i < 9+1 ; i++ ){
-    ctx.moveTo( i*CELLWIDTH+CELLWIDTH , 6*CELLWIDTH );
-    ctx.lineTo( i*CELLWIDTH+CELLWIDTH , 7*CELLWIDTH );
-}
-ctx.stroke();
-window.onload = function(){
-    drawSunflower(1,0);
-    drawPlant(0,0);
-    drawBullet(1,100);
-    drawSun(1,0);
-    drawSlowZombie(0,8);
-    drawAngryZombie(1,8);
-    drawRock(1,3);
-    drawCart(0,0);
+
+    sunFlower.draw(6,0);
+    plant.draw(6,1);
+    rock.draw(6,2);
 }
 
-function drawSunflower(row,col){
-    ctx.drawImage(sunflower,col*CELLWIDTH+CELLWIDTH,row*CELLWIDTH,CELLWIDTH*9/7,CELLWIDTH*9/7)
+
+class Sunflower{
+    draw(row,col){
+        if( game.state == STATE_RUN ){
+            ctx.drawImage(sunflower_P,col*CELLWIDTH+CELLWIDTH,row*CELLWIDTH,CELLWIDTH*9/7,CELLWIDTH*9/7)
+        }
+    }
+    timeout(){
+        this.draw(1,0);
+    }
 }
-function drawPlant(row,col){
-    ctx.drawImage(plant,col*CELLWIDTH+CELLWIDTH,row*CELLWIDTH,CELLWIDTH*6/7,CELLWIDTH*6/7);
+class Plant{
+    draw(row,col){
+        if( game.state == STATE_RUN ){
+            ctx.drawImage(plant_P,col*CELLWIDTH+CELLWIDTH,row*CELLWIDTH,CELLWIDTH*6/7,CELLWIDTH*6/7);
+        }
+    }
+    timeout(){
+        this.draw(0,0);
+        bullet.shoot(0,0);
+    }
 }
-function drawBullet(row,x){
-    ctx.drawImage(bullet,x+CELLWIDTH,row*CELLWIDTH+30,CELLWIDTH*2/7,CELLWIDTH*2/7);
+class Rock{
+    draw(row,col){
+        if( game.state == STATE_RUN ){
+            ctx.drawImage(rock_P,col*CELLWIDTH+CELLWIDTH,row*CELLWIDTH,CELLWIDTH*6/7,CELLWIDTH*6/7);
+        }
+    }
+    timeout(){
+            this.draw(1,3);
+    }
 }
-function drawSun(row,col){
-    ctx.drawImage(sun,col*CELLWIDTH+CELLWIDTH,row*CELLWIDTH,CELLWIDTH*4/7,CELLWIDTH*4/7);
+class Bullet{
+    draw(row,x){
+        if( game.state == STATE_RUN ){
+            ctx.drawImage(bullet_P,x+CELLWIDTH,row*CELLWIDTH+30,CELLWIDTH*2/7,CELLWIDTH*2/7);
+        }
+    }
+    shoot(row,col){
+        console.log("shoot");
+        for( let i = col*CELLWIDTH+50 ; i < CELLWIDTH*9+CELLWIDTH ; i+=10 ){
+            this.draw(row,i);
+            //setTimeout( this.shoot.bind(this) , 500 );
+        }
+    }
 }
-function drawSlowZombie(row,col){
-    ctx.drawImage(slowZombie,col*CELLWIDTH+CELLWIDTH,row*CELLWIDTH,CELLWIDTH,CELLWIDTH);
+class Sun{
+    draw(row,col){
+        if( game.state == STATE_RUN ){
+            ctx.drawImage(sun_P,col*CELLWIDTH+CELLWIDTH,row*CELLWIDTH,CELLWIDTH*4/7,CELLWIDTH*4/7);
+        }
+    }
+    timeout(){
+        this.draw(1,0);
+    }
 }
-function drawAngryZombie(row,col){
-    ctx.drawImage(angryZombie,col*CELLWIDTH+CELLWIDTH,row*CELLWIDTH,CELLWIDTH*6/7,CELLWIDTH*6/7);
+class SlowZombie{
+    who = 0 ;
+    move = 0 ;
+    draw(row,x){
+        if( this.who%2 == 0 ){
+            ctx.drawImage(slowZombie_1_P,x+CELLWIDTH,row*CELLWIDTH,CELLWIDTH,CELLWIDTH);
+        }else{
+            ctx.drawImage(slowZombie_2_P,x+CELLWIDTH,row*CELLWIDTH,CELLWIDTH,CELLWIDTH);
+        }
+    }
+    timeout(){
+        this.who += 1 ;
+        this.move += 50 ;
+        this.draw(0,CELLWIDTH*9-this.move);
+    }
 }
-function drawRock(row,col){
-    ctx.drawImage(rock,col*CELLWIDTH+CELLWIDTH,row*CELLWIDTH,CELLWIDTH*6/7,CELLWIDTH*6/7);
+class AngryZombie{
+    who = 0 ;
+    move =0 ;
+    draw(row,x){
+        if( x < 0 ){
+            cart.use(row);
+        }
+        if( this.who%2 == 0 ){
+            ctx.drawImage(angryZombie_1_P,x+CELLWIDTH,row*CELLWIDTH,CELLWIDTH*6/7,CELLWIDTH*6/7);
+        }else{
+            ctx.drawImage(angryZombie_2_P,x+CELLWIDTH,row*CELLWIDTH,CELLWIDTH*6/7,CELLWIDTH*6/7);
+        }
+    }
+    timeout(){
+        this.who += 1 ;
+        this.move += 50 ;
+        this.draw(1,CELLWIDTH*9-this.move);
+    }
 }
-function drawCart(row,x){
-    ctx.drawImage(cart,0,row*CELLWIDTH,CELLWIDTH*5/7,CELLWIDTH*5/7);
+class Cart{
+    draw(row,x){
+        ctx.drawImage(cart_P,0,row*CELLWIDTH,CELLWIDTH*5/7,CELLWIDTH*5/7);
+    }
+    timeout(){
+        for( let i = 0 ; i < 5 ; i ++ ){
+            this.draw(i,0);
+        }
+    }
+    use(row){
+        //console.log(row);
+        for( let i = 0-CELLWIDTH ; i < CELLWIDTH*9+CELLWIDTH ; i++ ){
+            this.draw(row,i);
+            setTimeout( this.use.bind(this) , 100 );
+            //console.log(i);
+        }
+    }
 }
+
+let sunFlower = new Sunflower();
+let plant = new Plant();
+let bullet = new Bullet();
+let sun = new Sun();
+let slowZombie = new SlowZombie();
+let angryZombie = new AngryZombie();
+let rock = new Rock();
+let cart = new Cart();
+
+let move = 0 ;
+function time(){
+    if( game.state == STATE_RUN){
+        drawBackground();
+        sunFlower.timeout();
+        plant.timeout();
+        rock.timeout();
+        sun.timeout();
+        slowZombie.timeout();
+        angryZombie.timeout();
+        cart.timeout();
+        setTimeout( time , 1000 ) ;
+    }
+}
+
+
 
 
 </script>
