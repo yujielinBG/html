@@ -20,6 +20,8 @@
         <img id="angryZombie_2_P" src="./running - 複製.png" alt="Source Image" style="display:none;" >
         <img id="rock_P" src="./rocks.png" alt="Source Image" style="display:none;" >
         <img id="cart_P" src="./shopping-cart.png" alt="Source Image" style="display:none;" >
+        <img id="pause" src="./pause.png" alt="Source Image" style="display:none;" >
+        <img id="restart" src="./restart.png" alt="Source Image" style="display:none;" >
 
         開始:a
         暫停:s
@@ -39,6 +41,7 @@ const CELLWIDTH = 100 ;
 
 const STATE_STOP = 0;
 const STATE_RUN = 1;
+const STATE_SUSPEND = 2;
 
 const canvas = document.getElementById('_Canvas');
 const ctx = canvas.getContext('2d');
@@ -49,20 +52,38 @@ class Game{
     constructor() {
         document.addEventListener('keydown', this.keyEvents.bind(this) ) ;
     }
-    init(){}
+    init(){
+        slowZombie.init();
+        angryZombie.init();
+    }
     start(){
+        this.init();
+        if ( this.state != STATE_STOP ) {
+            return ;
+        }
         this.state = STATE_RUN ;
         time();
     }
     suspend(){
-        this.state = STATE_STOP ;
-        console.log( this.state );
+        if ( this.state != STATE_RUN ) {
+            return ;
+        }
+        ctx.drawImage(pause,CELLWIDTH*4.5,CELLWIDTH*2,CELLWIDTH*1.5,CELLWIDTH*1.5);
+        this.state = STATE_SUSPEND ;
+        //console.log( this.state );
     }
     resume(){
+        if ( this.state != STATE_SUSPEND ) {
+            return ;
+        }
         this.state = STATE_RUN ;
         time();
     }
     stop(){
+        if ( this.state != STATE_RUN ) {
+            return ;
+        }
+        ctx.drawImage(restart,CELLWIDTH*4.5,CELLWIDTH*2,CELLWIDTH*1.5,CELLWIDTH*1.5);
         this.state = STATE_STOP ;
     }
     keyEvents(event) {
@@ -140,14 +161,21 @@ class Sunflower{
     }
 }
 class Plant{
+    time10 = 0 ;
     draw(row,col){
         if( game.state == STATE_RUN ){
             ctx.drawImage(plant_P,col*CELLWIDTH+CELLWIDTH,row*CELLWIDTH,CELLWIDTH*6/7,CELLWIDTH*6/7);
         }
     }
     timeout(){
+        this.time10 += 1 ;
         this.draw(0,0);
-        bullet.shoot(0,0);
+        if( this.time10 == 9 ){
+            new Bullet();
+            bullet.now = this.SHOOTING ;
+            //bullet.shoot(0,0);
+            this.time10 = 0 ;
+        }
     }
 }
 class Rock{
@@ -157,20 +185,29 @@ class Rock{
         }
     }
     timeout(){
-            this.draw(1,3);
+        this.draw(1,3);
     }
 }
 class Bullet{
+    move = 0 ;
+    NO = 0 ;
+    SHOOTING = 1 ;
+    now = this.NO ;
     draw(row,x){
+        console.log(x);
         if( game.state == STATE_RUN ){
-            ctx.drawImage(bullet_P,x+CELLWIDTH,row*CELLWIDTH+30,CELLWIDTH*2/7,CELLWIDTH*2/7);
+            ctx.drawImage(bullet_P,x+CELLWIDTH+CELLWIDTH/2,row*CELLWIDTH+CELLWIDTH*3/10,CELLWIDTH*2/7,CELLWIDTH*2/7);
         }
     }
     shoot(row,col){
-        console.log("shoot");
-        for( let i = col*CELLWIDTH+50 ; i < CELLWIDTH*9+CELLWIDTH ; i+=10 ){
-            this.draw(row,i);
-            //setTimeout( this.shoot.bind(this) , 500 );
+        this.timeout();
+        this.now = this.SHOOTING ;
+        this.draw(row,col*CELLWIDTH+this.move);
+    }
+    timeout(){
+        if( this.now == this.SHOOTING ){
+            this.move += 1 ;
+            //shoot();
         }
     }
 }
@@ -187,6 +224,7 @@ class Sun{
 class SlowZombie{
     who = 0 ;
     move = 0 ;
+    time10 = 0 ;
     draw(row,x){
         if( this.who%2 == 0 ){
             ctx.drawImage(slowZombie_1_P,x+CELLWIDTH,row*CELLWIDTH,CELLWIDTH,CELLWIDTH);
@@ -195,14 +233,22 @@ class SlowZombie{
         }
     }
     timeout(){
-        this.who += 1 ;
-        this.move += 50 ;
+        this.time10 += 1 ;
+        if( this.time10 == 9 ){
+            this.who += 1 ;
+            this.move += 50 ;
+            this.time10 = 0 ;
+        }
         this.draw(0,CELLWIDTH*9-this.move);
+    }
+    init(){
+        this.move = 0 ;
     }
 }
 class AngryZombie{
     who = 0 ;
     move =0 ;
+    time10 = 0 ;
     draw(row,x){
         if( x < 0 ){
             cart.use(row);
@@ -214,9 +260,17 @@ class AngryZombie{
         }
     }
     timeout(){
-        this.who += 1 ;
-        this.move += 50 ;
+        this.time10 += 1 ;
+        if( this.time10 == 9 ){
+            this.who += 1 ;
+            this.move += 50 ;
+            this.time10 = 0 ;
+        }
         this.draw(1,CELLWIDTH*9-this.move);
+        //console.log(this.time10);
+    }
+    init(){
+        this.move = 0 ;
     }
 }
 class Cart{
@@ -254,11 +308,12 @@ function time(){
         sunFlower.timeout();
         plant.timeout();
         rock.timeout();
+        bullet.timeout();
         sun.timeout();
         slowZombie.timeout();
         angryZombie.timeout();
         cart.timeout();
-        setTimeout( time , 1000 ) ;
+        setTimeout( time , 100 ) ;
     }
 }
 
