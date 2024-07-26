@@ -172,7 +172,7 @@ class Plant{
         this.draw(0,0);
         if( this.time10 == 9 ){
             new Bullet();
-            bullet.now = this.SHOOTING ;
+            bullet.now = bullet.SHOOTING ;
             //bullet.shoot(0,0);
             this.time10 = 0 ;
         }
@@ -194,21 +194,19 @@ class Bullet{
     SHOOTING = 1 ;
     now = this.NO ;
     draw(row,x){
-        console.log(x);
+        //console.log(x);
         if( game.state == STATE_RUN ){
             ctx.drawImage(bullet_P,x+CELLWIDTH+CELLWIDTH/2,row*CELLWIDTH+CELLWIDTH*3/10,CELLWIDTH*2/7,CELLWIDTH*2/7);
         }
     }
     shoot(row,col){
-        this.timeout();
-        this.now = this.SHOOTING ;
-        this.draw(row,col*CELLWIDTH+this.move);
-    }
-    timeout(){
         if( this.now == this.SHOOTING ){
             this.move += 1 ;
-            //shoot();
+            this.draw(row,col*CELLWIDTH+this.move);
         }
+    }
+    timeout(){
+        this.shoot(0,0);
     }
 }
 class Sun{
@@ -234,7 +232,7 @@ class SlowZombie{
     }
     timeout(){
         this.time10 += 1 ;
-        if( this.time10 == 9 ){
+        if( this.time10 == 200 ){
             this.who += 1 ;
             this.move += 50 ;
             this.time10 = 0 ;
@@ -261,7 +259,7 @@ class AngryZombie{
     }
     timeout(){
         this.time10 += 1 ;
-        if( this.time10 == 9 ){
+        if( this.time10 == 200 ){
             this.who += 1 ;
             this.move += 50 ;
             this.time10 = 0 ;
@@ -313,7 +311,7 @@ function time(){
         slowZombie.timeout();
         angryZombie.timeout();
         cart.timeout();
-        setTimeout( time , 100 ) ;
+        setTimeout( time , 1 ) ;
     }
 }
 
