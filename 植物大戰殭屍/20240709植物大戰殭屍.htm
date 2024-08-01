@@ -45,7 +45,7 @@ const STATE_SUSPEND = 2;
 
 const canvas = document.getElementById('_Canvas');
 const ctx = canvas.getContext('2d');
-
+score_sun = 25 ;
 
 class Game{
     state = STATE_STOP ;
@@ -111,6 +111,9 @@ class Game{
 let game = new Game();
 
 function drawBackground(){
+    ctx.fillStyle = 'white';
+    ctx.fillRect( CELLWIDTH*2 , 5*CELLWIDTH+CELLWIDTH*1/10 , CELLWIDTH-CELLWIDTH*2/10, CELLWIDTH-CELLWIDTH*2/10 );
+    ctx.beginPath();
     ctx.fillStyle = 'green';
     ctx.fillRect( 0 , 0 , CELLWIDTH*9+CELLWIDTH , CELLWIDTH*5 );
     ctx.beginPath();
@@ -140,11 +143,15 @@ function drawBackground(){
         ctx.moveTo( i*CELLWIDTH+CELLWIDTH , 6*CELLWIDTH );
         ctx.lineTo( i*CELLWIDTH+CELLWIDTH , 7*CELLWIDTH );
     }
-    ctx.stroke();
+    ctx.drawImage(sunflower_P,0*CELLWIDTH+CELLWIDTH,6*CELLWIDTH,CELLWIDTH*9/7,CELLWIDTH*9/7);
+    ctx.drawImage(plant_P,1*CELLWIDTH+CELLWIDTH,6*CELLWIDTH,CELLWIDTH*6/7,CELLWIDTH*6/7);
+    ctx.drawImage(rock_P,2*CELLWIDTH+CELLWIDTH,6*CELLWIDTH,CELLWIDTH*6/7,CELLWIDTH*6/7);
+    ctx.drawImage(sun_P,1*CELLWIDTH,5*CELLWIDTH+CELLWIDTH*1/5,CELLWIDTH*4/7,CELLWIDTH*4/7);
+    ctx.font = "30px 微軟正黑體";
+    ctx.fillStyle="black";
+    ctx.fillText(score_sun, 2*CELLWIDTH, CELLWIDTH*5+CELLWIDTH*3/5);
 
-    // sunFlower.draw(6,0);
-    // plant.draw(6,1);
-    // rock.draw(6,2);
+    ctx.stroke();
 }
 
 
@@ -153,17 +160,48 @@ class Sunflower{
     row = 1 ;
     col = 0 ;
     time10 = 0 ;
+    constructor( row, col ) {
+        this.row = row ;
+        this.col = col ;
+        objectsP[objectsP.length] = this; 
+    }
     draw(){
         if( game.state == STATE_RUN ){
-            ctx.drawImage(sunflower_P,this.col*CELLWIDTH+CELLWIDTH,this.row*CELLWIDTH,CELLWIDTH*9/7,CELLWIDTH*9/7)
+            ctx.drawImage(sunflower_P,this.col*CELLWIDTH+CELLWIDTH,this.row*CELLWIDTH,CELLWIDTH*9/7,CELLWIDTH*9/7);
+        }
+    }
+    makeSun(){
+    }
+    timeout(){
+        this.time10 += 1 ;
+        this.draw();
+        if(this.time10 == 5000 ){
+            new Sun(this.row,this.col);
+            this.time10 = 0 ;
+        }  
+    }
+}
+class Sun{
+    isAlive = true ;
+    live = 0 ;
+    row = 0 ;
+    col = 0 ;
+    constructor( row, col ) {
+        this.row = row ;
+        this.col = col ;
+        objectsP[objectsP.length] = this; 
+    }
+    draw(){
+        if( game.state == STATE_RUN ){
+            ctx.drawImage(sun_P,this.col*CELLWIDTH+CELLWIDTH,this.row*CELLWIDTH,CELLWIDTH*4/7,CELLWIDTH*4/7);
         }
     }
     timeout(){
-        this.draw(this.row,this.col);
-        this.time10 += 1 ;
-        if(this.time10 == 10000 ){
-            new Sun(1,0);
-            this.time10 = 0 ;
+        this.draw();
+        this.live++;
+        if( this.live == 1000 ){
+            score_sun += 25 ;
+            this.isAlive = false ;
         }
     }
 }
@@ -172,6 +210,11 @@ class Plant{
     time10 = 0 ;
     row = 0 ;
     col = 0 ;
+    constructor( row, x ) {
+        this.row = row ;
+        this.x = x ;
+        objectsP[objectsP.length] = this; 
+    }
     draw(){
         if( game.state == STATE_RUN ){
             ctx.drawImage(plant_P,this.col*CELLWIDTH+CELLWIDTH,this.row*CELLWIDTH,CELLWIDTH*6/7,CELLWIDTH*6/7);
@@ -181,30 +224,16 @@ class Plant{
         this.time10 += 1 ;
         this.draw();
         if( this.time10 == 300 ){
-            console.log("sun");
             new Bullet(this.row,this.col*CELLWIDTH+CELLWIDTH+CELLWIDTH/2);
             this.time10 = 0 ;
         }
     }
 }
-class Rock{
-    isAlive = true ;
-    row = 1 ;
-    col = 3 ;
-    draw(){
-        if( game.state == STATE_RUN ){
-            ctx.drawImage(rock_P,this.col*CELLWIDTH+CELLWIDTH,this.row*CELLWIDTH,CELLWIDTH*6/7,CELLWIDTH*6/7);
-        }
-    }
-    timeout(){
-        this.draw(this.row,this.col);
-    }
-}
 class Bullet{
+    isAlive = true ;
     move = 0 ;
     row = 0 ;
     x = 0 ;
-    isAlive = true ;
     constructor( row, x ) {
         this.row = row ;
         this.x = x ;
@@ -225,15 +254,22 @@ class Bullet{
         }
     }
 }
-class Sun{
+class Rock{
     isAlive = true ;
-    draw(row,col){
+    row = 0 ;
+    col = 0 ;
+    constructor( row, col ) {
+        this.row = row ;
+        this.col = col ;
+        objectsP[objectsP.length] = this; 
+    }
+    draw(){
         if( game.state == STATE_RUN ){
-            ctx.drawImage(sun_P,col*CELLWIDTH+CELLWIDTH,row*CELLWIDTH,CELLWIDTH*4/7,CELLWIDTH*4/7);
+            ctx.drawImage(rock_P,this.col*CELLWIDTH+CELLWIDTH,this.row*CELLWIDTH,CELLWIDTH*6/7,CELLWIDTH*6/7);
         }
     }
     timeout(){
-        this.draw(1,0);
+        this.draw(this.row,this.col);
     }
 }
 class SlowZombie{
@@ -241,11 +277,18 @@ class SlowZombie{
     who = 0 ;
     move = 0 ;
     time10 = 0 ;
-    draw(row,x){
+    row = 0 ;
+    x = 0 ;
+    constructor( row, x ) {
+        this.row = row ;
+        this.x = x ;
+        objectsZ[objectsZ.length] = this; 
+    }
+    draw(){
         if( this.who%2 == 0 ){
-            ctx.drawImage(slowZombie_1_P,x+CELLWIDTH,row*CELLWIDTH,CELLWIDTH,CELLWIDTH);
+            ctx.drawImage(slowZombie_1_P,this.x+CELLWIDTH,this.row*CELLWIDTH,CELLWIDTH,CELLWIDTH);
         }else{
-            ctx.drawImage(slowZombie_2_P,x+CELLWIDTH,row*CELLWIDTH,CELLWIDTH,CELLWIDTH);
+            ctx.drawImage(slowZombie_2_P,this.x+CELLWIDTH,this.row*CELLWIDTH,CELLWIDTH,CELLWIDTH);
         }
     }
     timeout(){
@@ -266,14 +309,21 @@ class AngryZombie{
     who = 0 ;
     move =0 ;
     time10 = 0 ;
-    draw(row,x){
-        if( x < 0 ){
+    row = 0 ;
+    x = 0 ;
+    constructor( row, x ) {
+        this.row = row ;
+        this.x = x ;
+        objectsP[objectsP.length] = this; 
+    }
+    draw(){
+        if( this.x < 0 ){
             //cart.use(row);
         }
         if( this.who%2 == 0 ){
-            ctx.drawImage(angryZombie_1_P,x+CELLWIDTH,row*CELLWIDTH,CELLWIDTH*6/7,CELLWIDTH*6/7);
+            ctx.drawImage(angryZombie_1_P,this.x+CELLWIDTH,this.row*CELLWIDTH,CELLWIDTH*6/7,CELLWIDTH*6/7);
         }else{
-            ctx.drawImage(angryZombie_2_P,x+CELLWIDTH,row*CELLWIDTH,CELLWIDTH*6/7,CELLWIDTH*6/7);
+            ctx.drawImage(angryZombie_2_P,this.x+CELLWIDTH,this.row*CELLWIDTH,CELLWIDTH*6/7,CELLWIDTH*6/7);
         }
     }
     timeout(){
@@ -292,30 +342,37 @@ class AngryZombie{
 }
 class Cart{
     isAlive = true ;
-    draw(row,x){
-        ctx.drawImage(cart_P,0,row*CELLWIDTH,CELLWIDTH*5/7,CELLWIDTH*5/7);
+    row = 0 ;
+    x = 0 ;
+    constructor( row ) {
+        this.row = row ;
+        objectsP[objectsP.length] = this; 
+    }
+    draw(){
+        ctx.drawImage(cart_P, this.x, this.row*CELLWIDTH, CELLWIDTH*5/7, CELLWIDTH*5/7);
     }
     timeout(){
-        for( let i = 0 ; i < 5 ; i ++ ){
-            this.draw(i,0);
-        }
+        this.draw();
     }
     use(row){
         //console.log(row);
-        for( let i = 0-CELLWIDTH ; i < CELLWIDTH*9+CELLWIDTH ; i++ ){
-            this.draw(row,i);
-            setTimeout( this.use.bind(this) , 100 );
-            //console.log(i);
-        }
+        // for( let i = 0-CELLWIDTH ; i < CELLWIDTH*9+CELLWIDTH ; i++ ){
+        //     this.draw();
+        //     setTimeout( this.use.bind(this) , 100 );
+        //     //console.log(i);
+        // }
     }
 }
 
 let objectsP = [] ;
-objectsP[objectsP.length] = new Sunflower();
-objectsP[objectsP.length] = new Plant();
-//objectsP[objectsP.length] = new Sun();
-objectsP[objectsP.length] = new Rock();
-objectsP[objectsP.length] = new Cart();
+objectsP[objectsP.length] = new Sunflower(1,0);
+objectsP[objectsP.length] = new Plant(0,0);
+objectsP[objectsP.length] = new Rock(1,3);
+objectsP[objectsP.length] = new Cart(0);
+objectsP[objectsP.length] = new Cart(1);
+objectsP[objectsP.length] = new Cart(2);
+objectsP[objectsP.length] = new Cart(3);
+objectsP[objectsP.length] = new Cart(4);
 
 let objectsZ = [] ;
 objectsZ[objectsZ.length] = new SlowZombie();
