@@ -1,0 +1,44 @@
+<html lang="en">
+	<head>
+	    <title>test</title>
+		<meta charset="UTF-8">
+		<style>
+			canvas { border: 1px solid #000; }
+		</style>
+	</head>
+	<body>
+		<canvas id="_Canvas" width="600" height="600"></canvas>
+	</body>
+</html>
+
+
+<!--
+=======================================================
+   Script
+=======================================================
+-->
+<script>
+
+const canvas = document.getElementById('_Canvas');
+const ctx = canvas.getContext('2d');
+
+ctx.beginPath();
+
+ctx.fillStyle = 'black';
+ctx.fillRect(0,0,100,100);//畫實方
+ctx.arc(500,500, 20, 0, 360);//畫圓
+ctx.fill();//填滿
+
+ctx.strokeStyle = 'black'; 
+ctx.lineWidth = 2 ; 
+ctx.moveTo(100,200);
+ctx.lineTo(100,300);
+
+ctx.stroke();
+
+ctx.font = "50px 微軟正黑體";
+ctx.textAlign = "center";
+ctx.textBaseline = "middle";
+ctx.fillText("嗨", 500, 100);
+
+</script> 
