@@ -34,20 +34,25 @@ const ctx = canvas.getContext('2d');
 // ctx.drawImage(go ,270 ,114 ,60 ,60);
 // }
 
+
+
 ctx.fillStyle = "SaddleBrown";;
 ctx.fillRect(0,0,canvas.width,canvas.height);
 
 let matrix = [];
-for(let row = 0 ; row < 7 ; row++ ){
-	matrix[row] = [];
-	for(let col = 0 ; col < 7 ; col++ ){
-		if( ((row < 2)||(row > 4))&&((col < 2)||(col > 4)) ){
-			matrix[row][col] = -1 ;
-		}else{
-			matrix[row][col] = 1;
+function init(){
+	for(let row = 0 ; row < 7 ; row++ ){
+		matrix[row] = [];
+		for(let col = 0 ; col < 7 ; col++ ){
+			if( ((row < 2)||(row > 4))&&((col < 2)||(col > 4)) ){
+				matrix[row][col] = -1 ;
+			}else{
+				matrix[row][col] = 1;
+			}
 		}
 	}
 }
+init();
 console.log(matrix);
 
 
@@ -73,6 +78,15 @@ function drawGo(){
 }
 drawGo();
 
+let history = [];
+class Place{
+	clickX ;
+	clickY ;
+	constructor( X , Y ){
+		this.clickX = X ;
+		this.clickY = Y ;
+	}
+}
 
 class Mouse{
 	first = true ;
@@ -86,17 +100,19 @@ class Mouse{
 	}
 	mouseEvent(event) {
 		const rect = canvas.getBoundingClientRect();
+		this.check( (event.clientX-rect.left) ,(event.clientY-rect.top) );
+	}
+	check( mouseX ,mouseY ){	//檢查哪一格
+		console.log("check");
 		for(let row = 0 ; row < 7 ; row++ ){
 			for(let col = 0 ; col < 7 ; col++ ){
 				if( matrix[row][col] >= 0 ){
-					this.check( (event.clientX-rect.left) ,(event.clientY-rect.top) ,row ,col )
+					if( Math.sqrt( ( mouseX-(50+100*row) )**2 + ( mouseY-(50+100*col) )**2 ) <= 20 ){
+						history.push( new Place( mouseX , mouseY ) );
+						this.run(row ,col);
+					}
 				}
 			}
-		}
-	}
-	check( mouseX ,mouseY ,goRow ,goCol ){	//檢查哪一格
-		if( Math.sqrt( ( mouseX-(50+100*goRow) )**2 + ( mouseY-(50+100*goCol) )**2 ) <= 20 ){
-			this.run(goRow ,goCol);
 		}
 	}
 	run( goRow ,goCol ){
@@ -121,9 +137,37 @@ class Mouse{
 			this.selected = false ;
 		}
 		drawGo();
+		//console.log(history);
 	}
 }
-new Mouse();
+let mouse = new Mouse();
+
+let playIdx = 0 ;
+function playRecord() {
+	if(playIdx < history.length){
+		mouse.check( history[playIdx].clickX , history[playIdx].clickY );
+		playIdx++;
+		setTimeout( playRecord , 1000 );
+	}
+}
+
+
+document.addEventListener('keydown', 
+	function(event) {
+		switch(event.code) {
+			case 'KeyH':
+				console.log('H key pressed.');
+				init();
+				drawGo();
+				playIdx = 0 ;
+				mouse.first = true ;
+				mouse.selected = false ;
+				playRecord();
+				break;
+		}
+		//console.log(event);
+	}
+);
 
 
 </script>
