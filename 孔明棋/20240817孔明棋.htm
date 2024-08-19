@@ -1,0 +1,126 @@
+<html lang="en">
+	<head>
+	    <title>孔明棋</title>
+		<meta charset="UTF-8">
+		<style>
+			canvas { border: 1px solid #000; }
+		</style>
+	</head>
+	<body>
+		<canvas id="canvas" width="700" height="700"></canvas>
+		<img id="background" src="./棋盤- Inkscape.png" alt="Source Image" style="display:none;" >
+		<img id="go" src="./棋-removebg.png" alt="Source Image" style="display:none;" >
+	</body>
+</html>
+
+
+<!--
+=======================================================
+   Script
+=======================================================
+-->
+
+<script>
+
+// const canvas = document.getElementById('_Canvas');
+const ctx = canvas.getContext('2d');
+
+// let img = document.getElementById( 'background' );
+
+// window.onload = function() {
+// ctx.drawImage(background ,0 ,0 ,canvas.width,canvas.height);
+// ctx.drawImage(go ,194 ,38 ,60 ,60);
+// ctx.drawImage(go ,194 ,114 ,60 ,60); //間距76
+// ctx.drawImage(go ,270 ,114 ,60 ,60);
+// }
+
+ctx.fillStyle = "SaddleBrown";;
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+let matrix = [];
+for(let row = 0 ; row < 7 ; row++ ){
+	matrix[row] = [];
+	for(let col = 0 ; col < 7 ; col++ ){
+		if( ((row < 2)||(row > 4))&&((col < 2)||(col > 4)) ){
+			matrix[row][col] = -1 ;
+		}else{
+			matrix[row][col] = 1;
+		}
+	}
+}
+console.log(matrix);
+
+
+function drawGo(){
+	ctx.fillStyle = 'black';
+	for(let row = 0 ; row < 7 ; row++ ){
+		for(let col = 0 ; col < 7 ; col++ ){
+			if( matrix[row][col] >= 0 ){
+				if( matrix[row][col] == 0 ){
+					ctx.fillStyle = 'black';
+				}else if( matrix[row][col] == 1 ){
+					ctx.fillStyle = 'Wheat';
+				}else if( matrix[row][col] == 0.5 ){
+					ctx.fillStyle = 'gray';
+				}
+				ctx.beginPath();
+				ctx.arc(50+100*row, 50+100*col, 30, 0, 360);
+				ctx.stroke();
+				ctx.fill();
+			}	
+		}
+	}
+}
+drawGo();
+
+
+class Mouse{
+	first = true ;
+	selected = false ;
+	selectedRow ;
+	selectedCol ;
+	constructor(){
+		document.addEventListener("click", this.mouseEvent.bind(this) ) ;
+	}
+	mouseEvent(event) {
+		const rect = canvas.getBoundingClientRect();
+		for(let row = 0 ; row < 7 ; row++ ){
+			for(let col = 0 ; col < 7 ; col++ ){
+				if( matrix[row][col] >= 0 ){
+					this.check( (event.clientX-rect.left) ,(event.clientY-rect.top) ,row ,col )
+				}
+			}
+		}
+	}
+	check( mouseX ,mouseY ,goRow ,goCol ){	//檢查哪一格
+		if( Math.sqrt( ( mouseX-(50+100*goRow) )**2 + ( mouseY-(50+100*goCol) )**2 ) <= 20 ){
+			this.run(goRow ,goCol);
+		}
+	}
+	run( goRow ,goCol ){
+		if( this.first == true ){	//第一次
+			//console.log("first");
+			matrix[goRow][goCol] = 0 ;
+			this.first = false ;
+		}else if( matrix[goRow][goCol] == 1 ){	//選擇
+			//console.log("select");
+			matrix[goRow][goCol] = 0.5 ;
+			if( this.selected == true ){
+				matrix[this.selectedRow][this.selectedCol = goCol] = 1 ;
+			}
+			this.selectedRow = goRow ;
+			this.selectedCol = goCol ;
+			this.selected = true ;
+		}else if( (matrix[goRow][goCol] == 0)&&(this.selected == true) ){	//跳
+			//console.log("jump");
+			matrix[goRow][goCol] = 1 ;
+			matrix[this.selectedRow][this.selectedCol] = 0 ;
+			this.selected = false ;
+		}
+		drawGo();
+	}
+}
+new Mouse();
+
+
+</script>

@@ -1,0 +1,160 @@
+<html lang="en">
+    <head>
+        <title>塔房</title>
+        <meta charset="UTF-8">
+        <style>
+            canvas {border: 1px solid #000; }
+        </style>
+    </head>
+    <body>
+        <div>
+            <canvas id="_Canvas" width="600" height="600"></canvas>
+        </div>
+        <img id="slimeP" src="./Slime./slime.png" alt="Source Image" style="display:none;" >
+        開始:a
+        暫停:s
+        繼續:d
+        結束:f 
+    </body>
+</html>
+
+<!--
+=======================================================
+   Script
+=======================================================
+-->
+
+<script>
+
+const CELLWIDTH = 60 ;
+
+const STATE_STOP = 0;
+const STATE_RUN = 1;
+const STATE_SUSPEND = 2;
+
+const canvas = document.getElementById('_Canvas');
+const ctx = canvas.getContext('2d');
+
+class Game {
+    state = STATE_STOP;
+    constructor() {
+        document.addEventListener('keydown', this.keyEvents.bind(this) ) ;
+    }
+    start(){
+        console.log("start");
+        this.state = STATE_RUN;
+        time();
+    }
+    suspend(){
+        console.log("suspend");
+        this.state = STATE_SUSPEND;
+    }
+    resume(){
+        console.log("resume");
+        this.state = STATE_RUN ;
+        time();
+    }
+    stop(){
+        console.log("stop");
+        this.state = STATE_STOP ;
+    }
+    keyEvents(event) {
+		switch(event.code) {
+            case 'KeyA':
+				//console.log('a key pressed.');
+				this.start();
+				break;
+
+            case 'KeyS':
+				//console.log('s key pressed.');
+				this.suspend();
+				break;
+
+            case 'KeyD':
+				//console.log('d key pressed.');
+				this.resume();
+				break;
+
+            case 'KeyF':
+				//console.log('f key pressed.');
+				this.stop();
+				break;
+        }
+    }
+}
+let game = new Game();
+
+function drawBackground(){
+    ctx.beginPath();
+    ctx.fillStyle = 'gray';
+    ctx.fillRect(0,0,600,600);
+    ctx.fill();
+    ctx.stroke();
+    
+    ctx.beginPath();
+    ctx.strokeStyle = 'white'; 
+    ctx.lineWidth = 0.5 ;
+    for(let i = 0 ; i < 10 ; i++ ){
+        ctx.moveTo(i*CELLWIDTH,0);
+        ctx.lineTo(i*CELLWIDTH,600);
+    }
+    for(let i = 0 ; i < 10 ; i++ ){
+        ctx.moveTo(0,i*CELLWIDTH);
+        ctx.lineTo(600,i*CELLWIDTH);
+    }
+    ctx.stroke();
+    
+    ctx.beginPath();
+    ctx.strokeStyle = 'black'; 
+    ctx.lineWidth = 4 ; 
+    ctx.moveTo(CELLWIDTH*8.5,0*CELLWIDTH*2+CELLWIDTH*1.5);
+    ctx.lineTo(CELLWIDTH*10,0*CELLWIDTH*2+CELLWIDTH*1.5);
+    ctx.moveTo(CELLWIDTH*0,4*CELLWIDTH*2+CELLWIDTH*1.5);
+    ctx.lineTo(CELLWIDTH*1.5,4*CELLWIDTH*2+CELLWIDTH*1.5);
+    for(let i = 0 ; i < 5 ; i++ ){
+        ctx.moveTo(CELLWIDTH*1.5,i*CELLWIDTH*2+CELLWIDTH*1.5);
+        ctx.lineTo(CELLWIDTH*8.5,i*CELLWIDTH*2+CELLWIDTH*1.5);
+    }
+    ctx.moveTo(CELLWIDTH*1.5,CELLWIDTH*1.5);
+    ctx.lineTo(CELLWIDTH*1.5,CELLWIDTH*3.5);
+    ctx.moveTo(CELLWIDTH*1.5,CELLWIDTH*5.5);
+    ctx.lineTo(CELLWIDTH*1.5,CELLWIDTH*7.5);
+    ctx.moveTo(CELLWIDTH*8.5,CELLWIDTH*3.5);
+    ctx.lineTo(CELLWIDTH*8.5,CELLWIDTH*5.5);
+    ctx.moveTo(CELLWIDTH*8.5,CELLWIDTH*7.5);
+    ctx.lineTo(CELLWIDTH*8.5,CELLWIDTH*9.5);
+    ctx.stroke();
+}
+
+class Entrance {
+    timeout(){
+        new Slime();
+    }
+}
+
+class Slime {
+    isAlive = true ;
+    timeout(){
+        console.log("timeout");
+    }
+    run(){
+        this.draw(10,10);
+    }
+    draw(x,y){
+        console.log("draw");
+        ctx.drawImage(slimeP,x,y,CELLWIDTH,CELLWIDTH);
+    }
+}
+let slime = new Slime();
+
+function time(){
+    if( game.state == STATE_RUN ){
+        drawBackground();
+        slime.timeout();
+        setTimeout( time , 1000 );
+    }
+}
+
+drawBackground();
+
+</script>
