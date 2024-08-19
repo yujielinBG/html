@@ -79,6 +79,8 @@ class Mouse{
 	selected = false ;
 	selectedRow ;
 	selectedCol ;
+	middleGoRow ;
+	middleGoCol ;
 	constructor(){
 		document.addEventListener("click", this.mouseEvent.bind(this) ) ;
 	}
@@ -111,10 +113,11 @@ class Mouse{
 			this.selectedRow = goRow ;
 			this.selectedCol = goCol ;
 			this.selected = true ;
-		}else if( (matrix[goRow][goCol] == 0)&&(this.selected == true) ){	//跳
+		}else if( (matrix[goRow][goCol] == 0)&&(this.selected == true)&&((Math.abs(goRow-this.selectedRow)==2)||(Math.abs(goCol-this.selectedCol)==2))&&(matrix[(goRow+this.selectedRow)/2][(goCol+this.selectedCol)/2]==1) ){	//跳
 			//console.log("jump");
 			matrix[goRow][goCol] = 1 ;
 			matrix[this.selectedRow][this.selectedCol] = 0 ;
+			matrix[(goRow+this.selectedRow)/2][(goCol+this.selectedCol)/2] = 0 ;
 			this.selected = false ;
 		}
 		drawGo();
