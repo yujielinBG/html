@@ -103,11 +103,11 @@ class Mouse{
 		this.check( (event.clientX-rect.left) ,(event.clientY-rect.top) );
 	}
 	check( mouseX ,mouseY ){	//檢查哪一格
-		console.log("check");
+		//console.log("check");
 		for(let row = 0 ; row < 7 ; row++ ){
 			for(let col = 0 ; col < 7 ; col++ ){
 				if( matrix[row][col] >= 0 ){
-					if( Math.sqrt( ( mouseX-(50+100*row) )**2 + ( mouseY-(50+100*col) )**2 ) <= 20 ){
+					if( Math.sqrt( ( mouseX-(50+100*row) )**2 + ( mouseY-(50+100*col) )**2 ) <= 30 ){
 						history.push( new Place( mouseX , mouseY ) );
 						this.run(row ,col);
 					}
@@ -119,10 +119,12 @@ class Mouse{
 		if( this.first == true ){	//第一次
 			//console.log("first");
 			matrix[goRow][goCol] = 0 ;
+			console.log("first",goRow,goCol);
 			this.first = false ;
 		}else if( matrix[goRow][goCol] == 1 ){	//選擇
 			//console.log("select");
 			matrix[goRow][goCol] = 0.5 ;
+			console.log("select",goRow,goCol);
 			if( this.selected == true ){
 				matrix[this.selectedRow][this.selectedCol] = 1 ;
 			}
@@ -132,6 +134,7 @@ class Mouse{
 		}else if( (matrix[goRow][goCol] == 0)&&(this.selected == true)&&((Math.abs(goRow-this.selectedRow)==2)||(Math.abs(goCol-this.selectedCol)==2))&&(matrix[(goRow+this.selectedRow)/2][(goCol+this.selectedCol)/2]==1) ){	//跳
 			//console.log("jump");
 			matrix[goRow][goCol] = 1 ;
+			console.log("go",goRow,goCol);
 			matrix[this.selectedRow][this.selectedCol] = 0 ;
 			matrix[(goRow+this.selectedRow)/2][(goCol+this.selectedCol)/2] = 0 ;
 			this.selected = false ;
