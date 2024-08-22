@@ -132,7 +132,12 @@ class Mouse{
 			this.selectedRow = goRow ;
 			this.selectedCol = goCol ;
 			this.selected = true ;
-		}else if( (matrix[goRow][goCol] == 0)&&(this.selected == true)&&((Math.abs(goRow-this.selectedRow)==2)||(Math.abs(goCol-this.selectedCol)==2))&&(matrix[(goRow+this.selectedRow)/2][(goCol+this.selectedCol)/2]==1) ){	//跳
+		}else if( (matrix[goRow][goCol] == 0)&&
+		(this.selected == true)&&
+		((Math.abs(goRow-this.selectedRow)==2)&&(Math.abs(goCol-this.selectedCol)==2))||
+		((Math.abs(goRow-this.selectedRow)==2)&&(Math.abs(goCol-this.selectedCol)==0))||
+		((Math.abs(goRow-this.selectedRow)==0)&&(Math.abs(goCol-this.selectedCol)==2))&&
+		(matrix[(goRow+this.selectedRow)/2][(goCol+this.selectedCol)/2]==1) ){	//跳
 			//console.log("jump");
 			matrix[goRow][goCol] = 1 ;
 			console.log("go",goRow,goCol);
