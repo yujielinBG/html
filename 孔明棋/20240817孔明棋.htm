@@ -73,7 +73,7 @@ function drawGo(){
 				ctx.arc(50+100*row, 50+100*col, 30, 0, 360);
 				ctx.stroke();
 				ctx.fill();
-			}	
+			}
 		}
 	}
 }
@@ -108,7 +108,7 @@ class Mouse{
 		for(let row = 0 ; row < 7 ; row++ ){
 			for(let col = 0 ; col < 7 ; col++ ){
 				if( matrix[row][col] >= 0 ){
-					if( Math.sqrt( ( mouseX-(50+100*row) )**2 + ( mouseY-(50+100*col) )**2 ) <= 30 ){
+					if( Math.sqrt( ( mouseX-(50+100*row) )**2 + ( mouseY-(50+100*col) )**2 ) <= 35 ){
 						history.push( new Place( mouseX , mouseY ) );
 						this.run(row ,col);
 					}
