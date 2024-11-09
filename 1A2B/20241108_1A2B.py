@@ -3,6 +3,8 @@ question = ['a','b','c','d']
 answer = ['a','b','c','d']
 howManyA = 0
 howManyB = 0
+howManyTimes = 0
+
 
 def created():
     num =[]
@@ -18,7 +20,7 @@ def created():
         #num.remove(r)
         #print(num)
         i+=1
-    #print(q)
+    print(question)
 
 def reply():
     answer_str = str(input("你猜"))
@@ -27,16 +29,26 @@ def reply():
     print("answer:",answer)
 
 def check():
-    print(howManyA,"A",howManyB,"B")
+    global howManyA,howManyB
     for i in range(4):
         for j in range(4):
             if(answer[i] == question[j]):
                 if(i==j):
-                    howManyA = howManyA+1
+                    howManyA +=1
                 else:
-                    howManyB = howManyB+1
+                    howManyB +=1
+    print(howManyA,"A",howManyB,"B")
+
 
 created()
-print("questions:",question)
-reply()
-check()
+i = True
+while i==True:
+    howManyTimes +=1
+    reply()
+    check()
+    if(howManyA == 4):
+        break
+    howManyA = 0
+    howManyB = 0
+print("猜對了")
+print("共花了",howManyTimes,"次")
