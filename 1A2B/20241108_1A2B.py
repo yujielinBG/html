@@ -22,11 +22,11 @@ def created():
         i+=1
     print(question)
 
-def reply():
-    answer_str = str(input("你猜"))
+def reply(time):
+    answer_str = input(f"你猜(第{time}次)")
     for i in range(4):
         answer[i] = int(answer_str[i])
-    print("answer:",answer)
+    #print("answer:",answer)
 
 def check():
     global howManyA,howManyB
@@ -44,7 +44,7 @@ created()
 i = True
 while i==True:
     howManyTimes +=1
-    reply()
+    reply(howManyTimes)
     check()
     if(howManyA == 4):
         break
