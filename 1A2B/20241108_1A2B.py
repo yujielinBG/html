@@ -1,9 +1,5 @@
 import random
 question = ['a','b','c','d']
-answer = ['a','b','c','d']
-howManyA = 0
-howManyB = 0
-howManyTimes = 0
 
 
 def created():
@@ -22,20 +18,13 @@ def created():
         i+=1
     print(question)
 
-def reply(time):
-    answer_str = input(f"你猜(第{time}次)")
-    if answer_str =="stop" :
-        return False
-    if len(answer_str) != 4 :
-        print("錯誤")
-        reply(time)
+def check(answer_str):
+    global question
+    answer = ['a','b','c','d']
+    howManyA = 0
+    howManyB = 0
     for i in range(4):
         answer[i] = int(answer_str[i])
-    #print("answer:",answer)
-    return True
-
-def check():
-    global howManyA,howManyB
     for i in range(4):
         for j in range(4):
             if(answer[i] == question[j]):
@@ -43,22 +32,22 @@ def check():
                     howManyA +=1
                 else:
                     howManyB +=1
-    print(howManyA,"A",howManyB,"B")
-    if(howManyA == 4):
-        return False
-    return True
-
+    return f"{howManyA}A{howManyB}B"
 
 created()
-i = True
-while i==True:
-    howManyTimes +=1
-    if(reply(howManyTimes) == False):
+howManyTimes = 1
+while True:
+    answer_str = input(f"你猜(第{howManyTimes}次)")
+    if answer_str =="stop" :
         print("停止")
         break
-    if(check() == False):
+    if len(answer_str) != 4 :
+        print("錯誤")
+        continue
+    howManyTimes +=1
+    result = check(answer_str)
+    print(result)
+    if(result == "4A0B" ):
         print("猜對了")
         print("共花了",howManyTimes,"次")
         break
-    howManyA = 0
-    howManyB = 0
