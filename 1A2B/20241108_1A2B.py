@@ -1,22 +1,12 @@
 import random
-question = ['a','b','c','d','e']
+question = []
 
 def created():
-    num =[]
-    #s=""    (字串方法)
-    for j in range(10):
-        num.insert(j,j)
-    #print(num)    (字串方法)
-    i = 0
-    while i<digit:
-        #print(i)
-        r = random.randint(0,9-i)
-        question[i] = num[r]
-        #s = s + num[r]    (字串方法)
-        del num[r]    #=num.remove(r)
-        #print(num)
-        i+=1
-    print(question)
+    while len(question)<digit:
+        r = random.randint(0,9)
+        if r not in question :
+            question.append(r)
+    # print(question)
 
 def check(answer_str):
     global question

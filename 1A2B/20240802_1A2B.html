@@ -8,6 +8,8 @@
 	</head>
 	<body>
 		<canvas id="_Canvas" width="700" height="700"></canvas>
+		說明：
+		按鍵盤ｒｇｂ後可改變數字顏色
 	</body>
 </html>
 
@@ -57,44 +59,8 @@ class MakeQuestion {
 
 }
 
-let makeQuestion = new MakeQuestion();
-const FIRST = makeQuestion.first;
-const SECOND = makeQuestion.second;
-const THIRD = makeQuestion.third;
-const FOURTH = makeQuestion.fourth;
-let question = [];
-question[0] = FIRST;
-question[1] = SECOND;
-question[2] = THIRD;
-question[3] = FOURTH;
-console.log(question);
-
-let place = [];
-place[0] = 200;
-place[1] = 300;
-place[2] = 400;
-place[3] = 500;
-
-ctx.strokeStyle = 'black'; 
-ctx.lineWidth = 1.5 ; 
-for(let i = 0 ; i < 4 ; i++ ){
-	ctx.moveTo(200+100*i,600);
-	ctx.lineTo(250+100*i,600);
-}
-ctx.stroke();
-
-ctx.font = "40px 微軟正黑體";
-ctx.textAlign = "left";
-ctx.textBaseline = "bottom";
-for(let i = 0 ; i < 10 ; i++ ){
-	ctx.fillText(i, 70*i, 680);
-}
-
-function clean(where){
-	ctx.beginPath();
-	ctx.fillStyle = 'white';
-	ctx.fillRect(place[where],550,49,49);
-	ctx.stroke();
+class NumInfo {
+	color = "black"
 }
 
 class Check{
@@ -156,6 +122,143 @@ class Check{
 		this.y += 25;
 	}
 }
+
+function drawNum(num,colorIdx){
+	ctx.font = "40px 微軟正黑體";
+	ctx.textAlign = "left";
+	ctx.textBaseline = "bottom";
+	ctx.fillStyle = colorDefine[colorIdx];
+	ctx.fillText(num, 70*num, 680);
+}
+
+function clean(where){
+	ctx.beginPath();
+	ctx.fillStyle = 'white';
+	ctx.fillRect(place[where],550,49,49);
+	ctx.stroke();
+}
+
+function guess(event) {
+	ctx.fillStyle = 'black';
+	ctx.font = "40px 微軟正黑體";
+	ctx.textAlign = "left";
+	ctx.textBaseline = "bottom";
+	switch(event.key) {
+		case '0':
+		case '1':
+		case '2':
+		case '3':
+		case '4':
+		case '5':
+		case '6':
+		case '7':
+		case '8':
+		case '9':
+			let n = Number(event.key) ;
+			for(let i = 0 ; i < 4 ; i++ ){
+				if( (answer[i] == n)||(pwhere == 4) ){
+					return ;
+				}
+			}
+			ctx.fillText( n, place[pwhere], 600);
+			answer[pwhere] = n ;
+			pwhere++;
+			break;
+			case 'Enter':
+				//console.log('Enter key pressed.');
+			//console.log(pwhere);
+			if(pwhere != 4){
+				return;
+			}
+			check.check();
+			for(let i = 0 ; i<4 ; i++ ){
+				clean(i);
+			}
+			pwhere = 0;
+			for(let i = 0 ; i < 4 ; i++ ){
+				answer[i] = undefined ;
+			}
+			break;
+			
+			case 'Backspace':
+				//console.log('Backspace key pressed.');
+				//console.log(pwhere);
+				clean(pwhere-1);
+				answer[pwhere-1] = undefined ;
+				pwhere--;
+				
+			}
+			// console.log(event);
+			// console.log(answer);
+		}
+
+function controller(event) {
+	// console.log(event) ;
+	switch( event.key ) {
+		case 'r':
+			colorIdx = 1 ;
+			return ;
+		case 'g':
+			colorIdx = 2 ;
+			return ;
+		case 'b':
+			colorIdx = 0 ;
+			return ;
+		case '0':
+		case '1':
+		case '2':
+		case '3':
+		case '4':
+		case '5':
+		case '6':
+		case '7':
+		case '8':
+		case '9':
+			if (colorIdx!=-1) {
+				drawNum( Number(event.key), colorIdx ) ;
+				colorIdx=-1;
+				return ;
+			}
+	}
+	guess(event) ;
+
+}
+
+
+let makeQuestion = new MakeQuestion();
+const FIRST = makeQuestion.first;
+const SECOND = makeQuestion.second;
+const THIRD = makeQuestion.third;
+const FOURTH = makeQuestion.fourth;
+let question = [];
+question[0] = FIRST;
+question[1] = SECOND;
+question[2] = THIRD;
+question[3] = FOURTH;
+console.log("question:",question);
+
+let numInfos = [];
+for( let i=0;i<10; i++) {
+	numInfos.push( new NumInfo() );
+}
+// console.log(numInfo)
+
+let place = [200,300,400,500];
+
+ctx.lineWidth = 1.5 ; 
+for(let i = 0 ; i < 4 ; i++ ){
+	ctx.strokeStyle = numInfos[i].color ; 
+	ctx.moveTo(200+100*i,600);
+	ctx.lineTo(250+100*i,600);
+}
+ctx.stroke();
+
+let colorDefine = ["black","red","green"] ;
+for(let i = 0 ; i < 10 ; i++ ){
+	drawNum(i,0);
+}
+
+
 let check = new Check();
 
 let pwhere = 0;
@@ -168,154 +271,11 @@ answer[0] = first ;
 answer[1] = second ;
 answer[2] = third ;
 answer[3] = fourth ;
-console.log(answer);
+// console.log("answer:",answer);
 
-document.addEventListener('keydown', 
-	function(event) {
-		ctx.fillStyle = 'black';
-		ctx.font = "40px 微軟正黑體";
-		ctx.textAlign = "left";
-		ctx.textBaseline = "bottom";
-		switch(event.code) {
-			case 'Numpad0':
-				//console.log(pwhere);
-				for(let i = 0 ; i < 4 ; i++ ){
-					if( (answer[i] == 0)||(pwhere == 4) ){
-						return ;
-					}
-				}
-				ctx.fillText( 0, place[pwhere], 600);
-				answer[pwhere] = 0 ;
-				pwhere++;
-				break;
-			case 'Numpad1':
-				//console.log('1 key pressed.');
-				for(let i = 0 ; i < 4 ; i++ ){
-					if( (answer[i] == 1)||(pwhere == 4) ){
-						return ;
-					}
-				}
-				ctx.fillText( 1, place[pwhere], 600);
-				answer[pwhere] = 1 ;
-				pwhere++;
-				break;
-			case 'Numpad2':
-				//console.log('2 key pressed.');
-				for(let i = 0 ; i < 4 ; i++ ){
-					if( (answer[i] == 2)||(pwhere == 4) ){
-						return ;
-					}
-				}
-				ctx.fillText( 2, place[pwhere], 600);
-				answer[pwhere] = 2 ;
-				pwhere++;
-				break;				  
-			case 'Numpad3':
-				//console.log('3 key pressed.');
-				for(let i = 0 ; i < 4 ; i++ ){
-					if( (answer[i] == 3)||(pwhere == 4) ){
-						return ;
-					}
-				}
-				ctx.fillText( 3, place[pwhere], 600);
-				answer[pwhere] = 3 ;
-				pwhere++;
-				break;
-			case 'Numpad4':
-				//console.log('4 key pressed.');
-				for(let i = 0 ; i < 4 ; i++ ){
-					if( (answer[i] == 4)||(pwhere == 4) ){
-						return ;
-					}
-				}
-				ctx.fillText( 4, place[pwhere], 600);
-				answer[pwhere] = 4 ;
-				pwhere++;
-				break;
-			case 'Numpad5':
-				//console.log('5 key pressed.');
-				for(let i = 0 ; i < 4 ; i++ ){
-					if( (answer[i] == 5)||(pwhere == 4) ){
-						return ;
-					}
-				}
-				ctx.fillText( 5, place[pwhere], 600);
-				answer[pwhere] = 5 ;
-				pwhere++;
-				break;
-			case 'Numpad6':
-				//console.log('6 key pressed.');
-				for(let i = 0 ; i < 4 ; i++ ){
-					if( (answer[i] == 6)||(pwhere == 4) ){
-						return ;
-					}
-				}
-				ctx.fillText( 6, place[pwhere], 600);
-				answer[pwhere] = 6 ;
-				pwhere++;
-				break;  
-			case 'Numpad7':
-				//console.log('7 key pressed.');
-				for(let i = 0 ; i < 4 ; i++ ){
-					if( (answer[i] == 7)||(pwhere == 4) ){
-						return ;
-					}
-				}
-				ctx.fillText( 7, place[pwhere], 600);
-				answer[pwhere] = 7 ;
-				pwhere++;
-				break;
-			case 'Numpad8':
-				//console.log('8 key pressed.');
-				for(let i = 0 ; i < 4 ; i++ ){
-					if( (answer[i] == 8)||(pwhere == 4) ){
-						return ;
-					}
-				}
-				ctx.fillText( 8, place[pwhere], 600);
-				answer[pwhere] = 8 ;
-				pwhere++;
-				break;
-			case 'Numpad9':
-				//console.log('9 key pressed.');
-				for(let i = 0 ; i < 4 ; i++ ){
-					if( (answer[i] == 9)||(pwhere == 4) ){
-						return ;
-					}
-				}
-				ctx.fillText( 9, place[pwhere], 600);
-				answer[pwhere] = 9 ;
-				pwhere++;
-				break;
-			case 'Enter':
-				//console.log('Enter key pressed.');
-			case 'NumpadEnter':
-				//console.log('NumpadEnter key pressed.');
-				//console.log(pwhere);
-				if(pwhere != 4){
-					return;
-				}
-				check.check();
-				for(let i = 0 ; i<4 ; i++ ){
-					clean(i);
-				}
-				pwhere = 0;
-				for(let i = 0 ; i < 4 ; i++ ){
-					answer[i] = undefined ;
-				}
-				break;
+colorIdx = -1 ;
 
-			case 'Backspace':
-				//console.log('Backspace key pressed.');
-				//console.log(pwhere);
-				clean(pwhere-1);
-				answer[pwhere-1] = undefined ;
-				pwhere--;
+document.addEventListener('keydown', controller ) ;
 
-		}
-		//console.log(event);
-		console.log(answer);
-	}
-);
 
 </script> 
