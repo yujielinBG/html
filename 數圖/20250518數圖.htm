@@ -1,0 +1,90 @@
+<html lang="en">
+	<head>
+	    <title>數圖</title>
+		<meta charset="UTF-8">
+		<style>
+			canvas { border: 1px solid #000; }
+		</style>
+	</head>
+	<body>
+		<canvas id="_Canvas" width="600" height="600"></canvas>
+	</body>
+</html>
+
+
+<!--
+=======================================================
+   Script
+=======================================================
+-->
+<script>
+
+const cellSize = 60 ;
+
+const canvas = document.getElementById('_Canvas');
+const ctx = canvas.getContext('2d');
+
+let puzzle = [];
+let state = [];
+
+for( row=0 ; row<(canvas.height-cellSize)/cellSize ; row++ ){
+    state[row] = [];
+    for( col=0 ; col<(canvas.width-cellSize)/cellSize ; col++ ){
+        state[row][col] = 0 ;
+    }
+}
+console.log(state);
+
+function draw(){
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 2 ;
+    for( i=cellSize ; i<=canvas.width ; i+=cellSize ){
+        ctx.beginPath();
+        ctx.moveTo(i,cellSize);
+        ctx.lineTo(i,canvas.height);
+        ctx.stroke();
+    }
+    for( i=cellSize ; i<=canvas.height ; i+=cellSize ){
+        ctx.beginPath();
+        ctx.moveTo(cellSize,i);
+        ctx.lineTo(canvas.width,i);
+        ctx.stroke();
+    }
+
+    ctx.beginPath();
+    ctx.fillStyle = 'black';
+    for( row=0 ; row<(canvas.height-cellSize)/cellSize ; row++ ){
+        for( col=0 ; col<(canvas.width-cellSize)/cellSize ; col++ ){
+            if( state[row][col] == 1 ){
+                ctx.fillRect((col+1)*cellSize, (row+1)*cellSize ,cellSize, cellSize);
+            }
+        }
+    }
+}
+
+
+class Mouse{
+	constructor(){
+		document.addEventListener("click", this.mouseEvent.bind(this) ) ;
+	}
+	mouseEvent(event) {
+		const rect = canvas.getBoundingClientRect();
+		this.check( (event.clientX-(rect.left+cellSize)) ,(event.clientY-(rect.top+cellSize)) );
+	}
+	check( mouseX ,mouseY ){	//檢查哪一格
+		//console.log("check");
+        console.log(mouseX,mouseY);
+        if( (mouseX > cellSize) || (mouseY > cellSize) || (mouseX < canvas.width) || (mouseY < canvas.height) ){
+            console.log(Math.trunc(mouseY/cellSize), Math.trunc(mouseX/cellSize))
+            state[Math.trunc(mouseY/cellSize)][Math.trunc(mouseX/cellSize)] = 1 ;
+            console.log(state);
+
+            draw();
+        }
+	}
+}
+
+let mouse = new Mouse();
+draw();
+
+</script>
