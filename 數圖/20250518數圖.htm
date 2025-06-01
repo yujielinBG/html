@@ -8,6 +8,7 @@
 	</head>
 	<body>
 		<canvas id="_Canvas" width="600" height="600"></canvas>
+        <br>點左鍵:填充，點中鍵:清除，點右鍵:註記
 	</body>
 </html>
 
@@ -19,23 +20,83 @@
 -->
 <script>
 
-const cellSize = 60 ;
+const cellSize = 120 ;
 
 const canvas = document.getElementById('_Canvas');
 const ctx = canvas.getContext('2d');
 
-let puzzle = [];
-let state = [];
+// // 類似 Python 的 randint(min, max)
+// const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-for( row=0 ; row<(canvas.height-cellSize)/cellSize ; row++ ){
-    state[row] = [];
-    for( col=0 ; col<(canvas.width-cellSize)/cellSize ; col++ ){
-        state[row][col] = 0 ;
+// 題目
+let puzzleMatrix = [];
+// 我的作答情況
+let stateMatrix = [];
+
+function initGame(){
+    // 初始化stateMatrix
+    for( row=0 ; row<(canvas.height-cellSize)/cellSize ; row++ ){
+        stateMatrix[row] = [];
+        for( col=0 ; col<(canvas.width-cellSize)/cellSize ; col++ ){
+            stateMatrix[row][col] = 0 ;
+        }
     }
+    console.log(stateMatrix);
+    // 初始化puzzleMatrix
+    for( row=0 ; row<(canvas.height-cellSize)/cellSize ; row++ ){
+        puzzleMatrix[row] = [];
+        for( col=0 ; col<(canvas.width-cellSize)/cellSize ; col++ ){
+            // puzzleMatrix[row][col] = getRandomInt(0,1) ;
+            puzzleMatrix[row][col] = Math.floor(Math.random() * 2);
+        }
+    }
+    console.log(puzzleMatrix);
+
 }
-console.log(state);
+function check(){
+    for( row=0 ; row<(canvas.height-cellSize)/cellSize ; row++ ){
+        for( col=0 ; col<(canvas.width-cellSize)/cellSize ; col++ ){
+            if( puzzleMatrix[row][col] == 0 ){
+                if( (stateMatrix[row][col] != 0) & (stateMatrix[row][col] != 2) ){
+                    return
+                }
+            }else if( puzzleMatrix[row][col] != stateMatrix[row][col] ){
+                return
+            }
+            
+        }
+    }
+    
+    ctx.font = "100px 微軟正黑體";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "red";
+    ctx.fillText("win", 100, 100);
+    console.log("win")
+}
 
 function draw(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for( row=0 ; row<(canvas.height-cellSize)/cellSize ; row++ ){
+        for( col=0 ; col<(canvas.width-cellSize)/cellSize ; col++ ){
+            if( stateMatrix[row][col] == 1 ){
+                ctx.beginPath();
+                ctx.fillStyle = 'gray';
+                ctx.fillRect((col+1)*cellSize, (row+1)*cellSize ,cellSize, cellSize);
+            }else if( stateMatrix[row][col] == 2 ){
+                ctx.beginPath();
+                ctx.strokeStyle = 'blue'; 
+                ctx.lineWidth = 5 ;
+                ctx.moveTo((col+1)*cellSize, (row+1)*cellSize);
+                ctx.lineTo(((col+1)+1)*cellSize, ((row+1)+1)*cellSize);
+                ctx.moveTo(((col+1)+1)*cellSize, (row+1)*cellSize);
+                ctx.lineTo((col+1)*cellSize, ((row+1)+1)*cellSize);
+                ctx.stroke()
+            }
+        }
+    }
+
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 2 ;
     for( i=cellSize ; i<=canvas.width ; i+=cellSize ){
@@ -50,41 +111,41 @@ function draw(){
         ctx.lineTo(canvas.width,i);
         ctx.stroke();
     }
-
-    ctx.beginPath();
-    ctx.fillStyle = 'black';
-    for( row=0 ; row<(canvas.height-cellSize)/cellSize ; row++ ){
-        for( col=0 ; col<(canvas.width-cellSize)/cellSize ; col++ ){
-            if( state[row][col] == 1 ){
-                ctx.fillRect((col+1)*cellSize, (row+1)*cellSize ,cellSize, cellSize);
-            }
-        }
-    }
 }
-
 
 class Mouse{
 	constructor(){
-		document.addEventListener("click", this.mouseEvent.bind(this) ) ;
+		document.addEventListener("mousedown", this.mouseEvent.bind(this) ) ;
+        // 防止預設右鍵選單出現
+        document.addEventListener("contextmenu", (e) => e.preventDefault());
 	}
 	mouseEvent(event) {
 		const rect = canvas.getBoundingClientRect();
-		this.check( (event.clientX-(rect.left+cellSize)) ,(event.clientY-(rect.top+cellSize)) );
+		this.check( (event.clientX-(rect.left+cellSize)) ,(event.clientY-(rect.top+cellSize)) ,event.button);
 	}
-	check( mouseX ,mouseY ){	//檢查哪一格
-		//console.log("check");
-        console.log(mouseX,mouseY);
+    // 檢查哪一格
+	check( mouseX ,mouseY ,eventButton ){
+        // console.log(mouseX,mouseY);
         if( (mouseX > cellSize) || (mouseY > cellSize) || (mouseX < canvas.width) || (mouseY < canvas.height) ){
-            console.log(Math.trunc(mouseY/cellSize), Math.trunc(mouseX/cellSize))
-            state[Math.trunc(mouseY/cellSize)][Math.trunc(mouseX/cellSize)] = 1 ;
-            console.log(state);
-
+            // console.log(Math.trunc(mouseY/cellSize), Math.trunc(mouseX/cellSize))
+            // 偵測左鍵
+            // console.log(eventButton);
+            if( eventButton === 0 ){
+                stateMatrix[Math.trunc(mouseY/cellSize)][Math.trunc(mouseX/cellSize)] = 1 ;
+            }else if( eventButton === 2 ){
+                stateMatrix[Math.trunc(mouseY/cellSize)][Math.trunc(mouseX/cellSize)] = 2 ;
+            }else if( eventButton === 1 ){
+                stateMatrix[Math.trunc(mouseY/cellSize)][Math.trunc(mouseX/cellSize)] = 0 ;
+            }
+            // console.log(stateMatrix);
             draw();
+            check();
         }
 	}
 }
 
 let mouse = new Mouse();
+initGame()
 draw();
 
 </script>
